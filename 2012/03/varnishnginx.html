@@ -1,0 +1,389 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>varnish&amp;nginx - Proxima Fermata</title>
+<meta name="description" content="varnishとnginxを使っているサーバをマイグレーションすることになり、今まで外部のLBを通していたのを直接処理することになった。 そこで問題になるのはSSLの扱い。varnishはSSLを扱えないため（作者はopensslのコードはクソだ、と一刀両断している）、httpsのフロントエンドとしては使えない。 そこで順序を入れ替え、nginxをフロントエンドに、varnishを挟んでunicornに投げるようにした。 ">
+
+
+  <meta name="author" content="nysalor">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Proxima Fermata">
+<meta property="og:title" content="varnish&amp;nginx">
+<meta property="og:url" content="http://localhost:4000/2012/03/varnishnginx.html">
+
+
+  <meta property="og:description" content="varnishとnginxを使っているサーバをマイグレーションすることになり、今まで外部のLBを通していたのを直接処理することになった。 そこで問題になるのはSSLの扱い。varnishはSSLを扱えないため（作者はopensslのコードはクソだ、と一刀両断している）、httpsのフロントエンドとしては使えない。 そこで順序を入れ替え、nginxをフロントエンドに、varnishを挟んでunicornに投げるようにした。 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2012-03-21T00:00:00+09:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/2012/03/varnishnginx.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Proxima Fermata Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--archive">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Proxima Fermata
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/blog" >blog</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio.jpg" alt="nysalor" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">nysalor</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>none.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">YOS</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">varnish&amp;nginx</h1>
+    
+    <p>varnishとnginxを使っているサーバをマイグレーションすることになり、今まで外部のLBを通していたのを直接処理することになった。
+そこで問題になるのはSSLの扱い。varnishはSSLを扱えないため（作者はopensslのコードはクソだ、と<a href="https://www.varnish-cache.org/docs/trunk/phk/ssl.html" target="_blank">一刀両断</a>している）、httpsのフロントエンドとしては使えない。
+そこで順序を入れ替え、nginxをフロントエンドに、varnishを挟んでunicornに投げるようにした。</p>
+
+<!--more-->
+<p>具体的には以下の通り。</p>
+
+<p>旧構成:<strong>LB→varnish→nginx→unicorn</strong></p>
+
+<p>新構成:<strong>nginx→varnish→unicorn</strong></p>
+
+<p>varnishはUNIX socketに対応していないので（<a href="https://www.varnish-cache.org/trac/ticket/1020" target="_blank">予定はあるようだが</a>）、unicornを適当なポートで待ち受けさせてやらなければならない。
+静的ファイルはフロントエンドのnginxで直接捌くためvarnishにキャッシュさせることはできなくなるが、nginx単体で充分なパフォーマンスが出るので考えなくていいだろう。</p>
+
+<p>nginxを80で待ち受けさせて、静的ファイル以外をバックエンドのvarnishに投げ、varnishがさらにバックエンドのunicornに投げる。
+これで問題なく動作しているかに見えたが、実は大きな罠があった。
+varnishはGETリクエストしかキャッシュしないため、POSTについてはそのままバックエンドに丸投げになるはずが、間にnginxが挟まったことで全てのリクエストがGETになってしまう現象が発生した。
+恐らくvclの記述がまずいのだと思うが、とりあえずnginxの方でGETリクエストのみをvarnishに投げ、それ以外は直接unicornに投げるように変更して解決した。
+以下はその設定。</p>
+
+<p><strong>/etc/nginx/sites-available/default</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>upstream varnish <span class="o">{</span>
+        server localhost:8080<span class="p">;</span>
+<span class="o">}</span>
+
+upstream unicorn-rails <span class="o">{</span>
+        server localhost:3000<span class="p">;</span>
+<span class="o">}</span>
+
+server <span class="o">{</span>
+        listen 80<span class="p">;</span>
+        server_name rails-app-sample.larus.jp<span class="p">;</span>
+        root /var/www/rails-app/current/public<span class="p">;</span>
+        error_log /var/www/rails-app/current/log/nginx-error.log<span class="p">;</span>
+
+        location ~ ^/assets|system/ <span class="o">{</span>
+                expires 1y<span class="p">;</span>
+                add_header Cache-Control public<span class="p">;</span>
+                add_header Last-Modified <span class="s2">""</span><span class="p">;</span>
+                add_header ETag <span class="s2">""</span><span class="p">;</span>
+        <span class="o">}</span>
+
+        location <span class="o">=</span> /favicon.ico <span class="o">{</span>
+            root   /var/www/rails-app/current/public/assets<span class="p">;</span>
+        <span class="o">}</span>
+
+        location / <span class="o">{</span>
+                proxy_set_header X-Real-IP  <span class="nv">$remote_addr</span><span class="p">;</span>
+                proxy_set_header X-Forwarded-For <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+                proxy_set_header Host <span class="nv">$http_host</span><span class="p">;</span>
+
+                <span class="k">if</span> <span class="o">(</span><span class="nv">$request_method</span> <span class="o">=</span> GET<span class="o">)</span> <span class="o">{</span>
+                        proxy_pass http ://varnish<span class="p">;</span>
+                        <span class="c"># httpの後のスペースは本来は省く</span>
+                <span class="o">}</span>
+
+                proxy_pass http ://unicorn-rails<span class="p">;</span>
+                <span class="c"># httpの後のスペースは本来は省く</span>
+        <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><strong>/etc/varnish/default.vcl</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>backend rails_app <span class="o">{</span>
+  .host <span class="o">=</span> <span class="s2">"127.0.0.1"</span><span class="p">;</span>
+  .port <span class="o">=</span> <span class="s2">"3000"</span><span class="p">;</span>
+  .connect_timeout <span class="o">=</span> 30s<span class="p">;</span>
+<span class="o">}</span>
+
+sub vcl_recv <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span>req.http.host <span class="o">==</span> <span class="s2">"rails-app-sample.larus.jp"</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nb">set </span>req.backend <span class="o">=</span> rails_app<span class="p">;</span>
+    <span class="k">return</span> <span class="o">(</span>lookup<span class="o">)</span><span class="p">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>なお、以後スケールする場合はnginxをロードバランサにしてvarnish+unicornの組を増やせば良い。</p>
+
+<p>しかしvarnishの作者はDJBの同類っぽくてやや不安・・・</p>
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Proxima Fermata. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

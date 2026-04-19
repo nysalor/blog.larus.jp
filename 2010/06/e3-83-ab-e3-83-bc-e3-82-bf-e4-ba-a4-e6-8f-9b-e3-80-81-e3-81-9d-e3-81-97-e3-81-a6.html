@@ -1,0 +1,338 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ルータ交換、そして - Proxima Fermata</title>
+<meta name="description" content="IRCが切断されまくる件についての続編。 ルータ−モデム間のLANケーブルと電話線を全て交換したが解決しないので、次の一手としてルータを変更してみることにした。 ルータはFreeBSDで運用していたが、無線APとして使っているバッファローのWZR-HP-G300NHにルータ機能が付いているので、これを有効にして切り替える。 原因が他にあった場合は元に戻せるよう、ネットワークにはあまり手を加えたくない。 というわけで、DHCPやDNS（unboundで運用中）はそのままに、デフォルトゲートウェイのみをWZR-HP-G300NHに移行する。 ">
+
+
+  <meta name="author" content="nysalor">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Proxima Fermata">
+<meta property="og:title" content="ルータ交換、そして">
+<meta property="og:url" content="http://localhost:4000/2010/06/e3-83-ab-e3-83-bc-e3-82-bf-e4-ba-a4-e6-8f-9b-e3-80-81-e3-81-9d-e3-81-97-e3-81-a6.html">
+
+
+  <meta property="og:description" content="IRCが切断されまくる件についての続編。 ルータ−モデム間のLANケーブルと電話線を全て交換したが解決しないので、次の一手としてルータを変更してみることにした。 ルータはFreeBSDで運用していたが、無線APとして使っているバッファローのWZR-HP-G300NHにルータ機能が付いているので、これを有効にして切り替える。 原因が他にあった場合は元に戻せるよう、ネットワークにはあまり手を加えたくない。 というわけで、DHCPやDNS（unboundで運用中）はそのままに、デフォルトゲートウェイのみをWZR-HP-G300NHに移行する。 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2010-06-16T00:00:00+09:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/2010/06/e3-83-ab-e3-83-bc-e3-82-bf-e4-ba-a4-e6-8f-9b-e3-80-81-e3-81-9d-e3-81-97-e3-81-a6.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Proxima Fermata Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--archive">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Proxima Fermata
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/blog" >blog</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio.jpg" alt="nysalor" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">nysalor</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>none.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">YOS</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">ルータ交換、そして</h1>
+    
+    <p><a href="http://blog.larus.jp/?p=89">IRCが切断されまくる件について</a>の続編。
+ルータ−モデム間のLANケーブルと電話線を全て交換したが解決しないので、次の一手としてルータを変更してみることにした。
+ルータはFreeBSDで運用していたが、無線APとして使っているバッファローのWZR-HP-G300NHにルータ機能が付いているので、これを有効にして切り替える。
+原因が他にあった場合は元に戻せるよう、ネットワークにはあまり手を加えたくない。
+というわけで、DHCPやDNS（unboundで運用中）はそのままに、デフォルトゲートウェイのみをWZR-HP-G300NHに移行する。</p>
+
+<!--more-->
+<p>まず、WZR以下略のルータ機能を復活させる。切り替えスイッチ一つで有効・無効にできる（WANポートの信号の有無を見て自動的に切り替えるAUTOもあり）が、有効にしたところLAN側のIPアドレスが自動的にデフォルトの192.168.1.1になってしまった。我が家のネットワークとはセグメントが違うので、いきなりここでつまずく。ちなみにルータ機能を有効にするとLAN側IPアドレスをDHCPで取得することはできない。何なのこの仕様。
+PCのIPアドレスを一時的に変更して対処し、とりあえず外には出れるようにした。
+次にFreeBSD側の設定変更。rc.confの以下の項目を全部NOに書き換える。</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ゲートウェイ</span>
+<span class="nv">gateway_enable</span><span class="o">=</span><span class="s2">"NO"</span>
+<span class="c"># mpd(pppドライバ)</span>
+<span class="nv">mpd_enable</span><span class="o">=</span><span class="s2">"NO"</span>
+<span class="c"># ipfilter</span>
+<span class="nv">ipfilter_enable</span><span class="o">=</span><span class="s2">"NO"</span>
+<span class="c"># NAT</span>
+<span class="nv">ipnat_enable</span><span class="o">=</span><span class="s2">"NO"</span>
+<span class="c"># linux igd(uPnPデーモン)</span>
+<span class="nv">linuxigd_enable</span><span class="o">=</span><span class="s2">"NO"</span>
+</code></pre></div></div>
+<p>さらにdefaultrouterをWZR略のアドレスに変更して、面倒なので再起動…すると応答がなくなった。あれぇ。
+起動はしているようだったので、普段繋げてないキーボードを繋いで確認。
+ifconfigしてみると、UPになってはいるもののLAN内のどこにも到達できない。
+自分自身のアドレスにも到達不可。なんとlocalhostにすら到達しない！
+小一時間ほどパニクったが、答えは簡単だった。ipfilterをkernelに組み込んでしまっていたので、ipfilter_enable=”NO”だとスタンドアロンになってしまうのであった。kernel moduleにしとけって話ですよね。
+後で戻す可能性もあるし、いちいちkernelの再構築をすることもないのでipfilterを有効にして再起動。以後は特に問題なし。</p>
+
+<p>さて、さっそくwiresharkでパケットを確認。TCPの再送は続いている…
+夜半にはめでたくIRCが切断。おめでとうルータ君、君の疑いは晴れた。
+これで外に繋がっているルートはモデムを除いて全て交換したので、NTTに電話するしかなくなった。
+以下次号。</p>
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Proxima Fermata. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

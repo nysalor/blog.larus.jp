@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-03-06T16:14:50+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Proxima Fermata</title><subtitle>日々是停留</subtitle><author><name>nysalor</name></author><entry><title type="html">繋がらないWiFi</title><link href="http://localhost:4000/2013/01/e7-b9-8b-e3-81-8c-e3-82-89-e3-81-aa-e3-81-84wifi.html" rel="alternate" type="text/html" title="繋がらないWiFi" /><published>2013-01-31T00:00:00+09:00</published><updated>2013-01-31T00:00:00+09:00</updated><id>http://localhost:4000/2013/01/%E7%B9%8B%E3%81%8C%E3%82%89%E3%81%AA%E3%81%84wifi</id><content type="html" xml:base="http://localhost:4000/2013/01/e7-b9-8b-e3-81-8c-e3-82-89-e3-81-aa-e3-81-84wifi.html">&lt;p&gt;東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。
+Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。
+なぜ繋がりにくくなるのか、繋がるようにするにはどうすればいいのか、自分の経験を交えて少し考察してみます。
+なお、無線通信の専門家ではないので、間違っていることを書いていたら指摘していただけると幸いです。&lt;/p&gt;
+
+&lt;!--more--&gt;
+&lt;p&gt;移動体通信とポータブルルータもかなり普及してきて、エンジニアなら大抵持っているどころか、２つ以上持っているという人も割と多いのではないでしょうか。いわゆるテザリングも原理としては同じです。
+こうしたルータとPC等の機器の間は、多くの場合WiFiで接続されます。ほとんどのルータはIEEE802.11g/n規格になっていて、これは2.4GHz〜2.5GHzの帯域を利用します。
+WiFiの電波は「チャンネル」という分け方をされていますが、これは周波数帯を20MHzで区切って「ここからここまでの周波数帯は何チャンネル」という意味です。もし、一つのチャンネルをいくつもの無線機器が利用しようとすると、電波がお互いに干渉を起こし、伝送エラーが頻発します。TCP/IPはエラーパケットがあれば再送を要求するため、混雑は爆発的に増大し、やがて輻輳（通信要求が過大になって繋がらなくなること）を起こします。&lt;/p&gt;
+
+&lt;p&gt;チャンネルをうまく棲み分けできれば問題は発生しにくくなるように思えますが、実はチャンネル同士は完全に独立しているわけではなく、スペクトラム拡散によって前後のチャンネル（で確保している周波数）にも電波が飛んでいます。
+&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.farproc.wifi.analyzer&amp;amp;hl=ja&quot; target=&quot;_blank&quot;&gt;WiFiアナライザー&lt;/a&gt;のようなツールを使って調べると、電波が指定したチャンネルを中心に山形になっているのが分かると思います。
+隣接するチャンネル同士が混雑すると、やがて同様に輻輳が発生すると思われます。&lt;/p&gt;
+
+&lt;p&gt;加えて、多くの人はルータのチャンネル設定を「自動」にしていると思いますが、これが曲者で、「自動」は「ルータを起動した時に空いているチャンネルを探す」ようになっています。家庭やオフィスで固定して使っている場合にはそれでも問題ないことがほとんどですが、ポータブルルータはずっと電源を入れっぱなしということも多く、「起動した時に空いていたチャンネル」を頑なに維持するため、空いているチャンネルを使うとは限りません。と言うかアナライザーで調べてみると分かるのですが、ほとんどのポータブルルータはチャンネル「1」を利用しています。起動した時に周囲にWiFi機器が存在しなかったのでそのままなのでしょう。&lt;/p&gt;
+
+&lt;div class=&quot;responsive-image&quot;&gt;
+  &lt;img class=&quot;responsive-image__placeholder&quot; src=&quot;/assets/images/resized/480/716759837.jpg&quot; /&gt;
+  &lt;div class=&quot;responsive-image__delayed&quot; data-src=&quot;/assets/resized/{width}/716759837.jpg&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Imager('.responsive-image__delayed', {
+    availableWidths: [480],
+    onImagesReplaced: function() {
+        $('.responsive-image__placeholder').hide()
+    }
+})
+&lt;/script&gt;
+
+&lt;p style=&quot;text-align: center;&quot;&gt;全く繋がらなくなっていた東京Ruby会議メインホールのWiFi状況。&lt;/p&gt;
+&lt;p&gt;また、ここでは詳しく述べませんが、携帯やスマートフォンで利用する3GやLTE回線も大勢の人が集まれば輻輳します。（LTEの方が速度が速い分輻輳しにくいと思われます）&lt;/p&gt;
+
+&lt;p&gt;3Gが輻輳すると、携帯は空いている周波数を探し始めるので、電池が急速に消耗するという副次的な問題も発生します。&lt;/p&gt;
+
+&lt;p&gt;さて、それではイベント等で大勢の人が集まる時、輻輳を回避するにはどうすればいいかを考えてみます。&lt;/p&gt;
+
+&lt;p&gt;まず大原則として、各自が持参するポケットルータの電源は切ってもらいましょう（スマートフォンはテザリングを無効にする）。たまに「回線を使わせて貰うのは申し訳ない」と言ってわざわざ自前の回線を使おうとする人がいますが、百害あって一利なしです。周波数帯は有限の資源ということを忘れないようにしましょう。&lt;/p&gt;
+
+&lt;p&gt;次に、なるべく同時接続数の多い無線LANアクセスポイントを用意します。家庭用のブロードバンドルータ等は同時接続数が少なく、チャンネルが輻輳するより遥かに前に接続障害が起きてしまいます。法人向けのモデルでは50〜100クライアントが接続可能なものもあります。接続数の少ないルータを多数持ち寄るなどの場合、チャンネルをうまくずらし、設置する場所を検討するなどして干渉を避けるべきです。後述するRubykaigiの実例が参考になると思います。&lt;/p&gt;
+
+&lt;p&gt;複数のアクセスポイントを設置する場合、理想的には使用しているチャンネルの前後２チャンネルずつを空けて、５チャンネルずつ利用するのが最も干渉が少なくなると思われます。すると実質的に利用できるのは1/5/9/13の４チャンネルになります。若干の干渉を許容するなら1/4/7/10/13の５チャンネルでも良いかも知れません。参加者の人数、WiFi利用率、会場の広さなどを検討し、最適な配置を考えると良いかと思います。また、アクセスポイントが均等に利用されるような工夫も必要です。&lt;/p&gt;
+
+&lt;div class=&quot;responsive-image&quot;&gt;
+  &lt;img class=&quot;responsive-image__placeholder&quot; src=&quot;/assets/images/resized/480/wifi.jpg&quot; /&gt;
+  &lt;div class=&quot;responsive-image__delayed&quot; data-src=&quot;/assets/resized/{width}/wifi.jpg&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Imager('.responsive-image__delayed', {
+    availableWidths: [480, 800],
+    onImagesReplaced: function() {
+        $('.responsive-image__placeholder').hide()
+    }
+})
+&lt;/script&gt;
+
+&lt;p&gt; &lt;/p&gt;
+&lt;p style=&quot;text-align: center;&quot;&gt;ネットワーク設計を手伝った某イベント会場のWiFi状況。
+４つのアクセスポイントを干渉しないように設置。会場収容限度が200人程度なので、この位で十分と判断した。
+４つの大きな山以外は近隣のWiFi。&lt;/p&gt;
+&lt;p&gt;さらに巨大なイベントになると、キャッシュサーバの利用、TCPセッションのタイムアウトを極小にするなどの工夫が必要になります。これについては、素晴らしいネットワーク環境を提供していただいた2011年のRubykaigiについて、構築を担当した小岩さんが&lt;a href=&quot;http://jp.rubyist.net/magazine/?0035-MakingOfRubyKaigi02&quot; target=&quot;_blank&quot;&gt;るびまに寄稿した記事&lt;/a&gt;を読んでいただくのが良いと思います。大変参考になる記事です。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。 Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。 なぜ繋がりにくくなるのか、繋がるようにするにはどうすればいいのか、自分の経験を交えて少し考察してみます。 なお、無線通信の専門家ではないので、間違っていることを書いていたら指摘していただけると幸いです。</summary></entry><entry><title type="html">東京Ruby会議10</title><link href="http://localhost:4000/2013/01/e6-9d-b1-e4-ba-acruby-e4-bc-9a-e8-ad-b010.html" rel="alternate" type="text/html" title="東京Ruby会議10" /><published>2013-01-15T00:00:00+09:00</published><updated>2013-01-15T00:00:00+09:00</updated><id>http://localhost:4000/2013/01/%E6%9D%B1%E4%BA%ACruby%E4%BC%9A%E8%AD%B010</id><content type="html" xml:base="http://localhost:4000/2013/01/e6-9d-b1-e4-ba-acruby-e4-bc-9a-e8-ad-b010.html">&lt;div class=&quot;responsive-image&quot;&gt;
+  &lt;img class=&quot;responsive-image__placeholder&quot; src=&quot;/assets/images/resized/480/DSC_0843.jpg&quot; /&gt;
+  &lt;div class=&quot;responsive-image__delayed&quot; data-src=&quot;/assets/resized/{width}/DSC_0843.jpg&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+new Imager('.responsive-image__delayed', {
+    availableWidths: [480, 800],
+    onImagesReplaced: function() {
+        $('.responsive-image__placeholder').hide()
+    }
+})
+&lt;/script&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://tokyo10.rubykaigi.info/&quot; target=&quot;_blank&quot;&gt;東京Ruby会議10&lt;/a&gt;（&lt;a href=&quot;https://twitter.com/search?q=%23tkrk10&amp;amp;src=hash&quot; target=&quot;_blank&quot;&gt;#tkrk10&lt;/a&gt;）に行ってきました。
+ちょっと・・・いや半端なく遠かったですが楽しかったです。
+以下、いくつかセッションの感想などを。&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;&lt;strong&gt;Rubyと過ごした半年間&lt;/strong&gt;（&lt;a href=&quot;https://twitter.com/ihara2525&quot; target=&quot;_blank&quot;&gt;@ihara2525&lt;/a&gt;さん）&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;「一行のアクセスログの向こうには一人のユーザがいる」&lt;/strong&gt;は感動しました。名言ですな。
+あ、そこ「ユーザ一人でもリクエストは複数飛ぶじゃん？」とか言ってはいけない。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Rubyistのためのデザイン講座&lt;/strong&gt;（&lt;a href=&quot;https://twitter.com/search?q=%23p4d&amp;amp;src=typd&quot; target=&quot;_blank&quot;&gt;#p4d&lt;/a&gt;の皆さん）&lt;/p&gt;
+
+&lt;p&gt;p4dという勉強会を主催されている方々によるワークショップです。
+Twitter Bootstrapを使いつつ、Bootstrapぽくないデザインの方法などを教えていただきました。
+デザイナーの発想と言うか、「まず何から見るか？」「何から考えるか？」という着眼点が非常に面白く参考になりました。
+p4dもいずれ参加してみたいと思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://speakerdeck.com/shishi/distributed-build-with-jenkins&quot; target=&quot;_blank&quot;&gt;Jenkinsと分散ビルド&lt;/a&gt;&lt;/strong&gt;（&lt;a href=&quot;https://twitter.com/shishi4tw&quot; target=&quot;_blank&quot;&gt;@shishi4tw&lt;/a&gt;さん）&lt;/p&gt;
+
+&lt;p&gt;ぼっち開発者なのもあってCIは使っていなかったのですが、分散ビルドのメリットが理解できました。
+やってみようかな？&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;How to change the world&lt;/strong&gt;（&lt;a href=&quot;https://twitter.com/yukihiro_matz&quot; target=&quot;_blank&quot;&gt;Matz&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;参加者の頭の中に直接語りかける&lt;/strong&gt;という斬新な方法での講演でした。
+小さな世界から変えていこう、モチベーションを大事にしよう、といういつもの（そして大事な）お話。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;DELUXURY TORUBY TYO 2013&lt;/strong&gt;（&lt;a href=&quot;https://twitter.com/search?q=%23toruby&amp;amp;src=typd&quot; target=&quot;_blank&quot;&gt;#toruby&lt;/a&gt;の皆さん）&lt;/p&gt;
+
+&lt;p&gt;torubyの咳さんによるDRubyと&lt;a href=&quot;https://github.com/seki/Drip&quot; target=&quot;_blank&quot;&gt;Drip&lt;/a&gt;のハンズオン。
+Dripの仕組みを理解することで、KVS全般に対する理解も深まった気がします。
+Dripはもっと流行ってもいいと思うんだ・・・&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://willnet.in/68&quot; target=&quot;_blank&quot;&gt;ブログのススメ&lt;/a&gt;（&lt;a href=&quot;https://twitter.com/netwillnet&quot; target=&quot;_blank&quot;&gt;@netwillnet&lt;/a&gt;さん）&lt;/p&gt;
+
+&lt;p&gt;最近、&lt;strong&gt;鳥&lt;/strong&gt;とか&lt;strong&gt;小人&lt;/strong&gt;に吸い取られてちゃんとブログ書いてませんでしたが、書く理由みたいのを再発見できました。
+ちゃんと書こう。うん。&lt;/p&gt;
+
+&lt;p&gt;あと、Twitterでなにかと構って下さってる&lt;a href=&quot;https://twitter.com/kazuhisa1976/&quot; target=&quot;_blank&quot;&gt;@kazuhisa1976&lt;/a&gt;さんとお話しできたのが嬉しかったです。
+Jenkinsの話はとても参考になりました。ありがとうございます。&lt;/p&gt;
+
+&lt;p&gt;最後は大雪で中止になってしまいましたが、これもまた良い思い出になるかと。
+スタッフ及び発表者、スポンサーの皆様どうもありがとうございました。
+次はThe Rubykaigiでお会いしましょう！
+&lt;del datetime=&quot;2013-01-14T21:21:10+00:00&quot;&gt;え・・・&lt;a href=&quot;http://regional.rubykaigi.org/gunma01&quot; target=&quot;_blank&quot;&gt;グンマー&lt;/a&gt;はちょっと・・・&lt;/del&gt;&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html"></summary></entry><entry><title type="html">tmux new-windowで環境変数が読み込まれない件</title><link href="http://localhost:4000/2012/11/tmux-new-window-e3-81-a7-e7-92-b0-e5-a2-83-e5-a4-89-e6-95-b0-e3-81-8c-e8-aa-ad-e3-81-bf-e8-be-bc-e3-81-be-e3-82-8c-e3-81-aa-e3-81-84-e4-bb-b6.html" rel="alternate" type="text/html" title="tmux new-windowで環境変数が読み込まれない件" /><published>2012-11-25T00:00:00+09:00</published><updated>2012-11-25T00:00:00+09:00</updated><id>http://localhost:4000/2012/11/tmux-new-window%E3%81%A7%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0%E3%81%8C%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BE%E3%82%8C%E3%81%AA%E3%81%84%E4%BB%B6</id><content type="html" xml:base="http://localhost:4000/2012/11/tmux-new-window-e3-81-a7-e7-92-b0-e5-a2-83-e5-a4-89-e6-95-b0-e3-81-8c-e8-aa-ad-e3-81-bf-e8-be-bc-e3-81-be-e3-82-8c-e3-81-aa-e3-81-84-e4-bb-b6.html">&lt;p&gt;ここのところ&lt;a href=&quot;http://qiita.com/users/nysalor&quot;&gt;qiitaの方&lt;/a&gt;ばっかり書いていて放置していたけど、たまにはこちらへ。&lt;/p&gt;
+
+&lt;p&gt;.tmux.confに&lt;em&gt;new-window -n pry pry&lt;/em&gt;と書いて自動的にpryのウィンドウを開いてたが、brew upgradeとかやってるうちに正常に起動しなくなった。
+エラーメッセージが一瞬で消えてしまうので分かりにくいが、&lt;em&gt;tmux new-window &quot;pry;read v&quot;&lt;/em&gt;とやればじっくり見ることができる。
+それによるとどうやらrvmで入れたpryがインタプリタとして/usr/bin/rubyを起動しようとしてSEGVしているらしい。
+Twitterで呟いて悩んでいたらサジェストを貰った。&lt;/p&gt;
+
+&lt;div class=&quot;jekyll-twitter-plugin&quot;&gt;&lt;blockquote class=&quot;twitter-tweet&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;&lt;a href=&quot;https://twitter.com/nysalor?ref_src=twsrc%5Etfw&quot;&gt;@nysalor&lt;/a&gt; tmux showenv -g PATH で tmux が持っている PATH 環境変数を調べられます。&lt;/p&gt;&amp;mdash; 坂口和彦 (@pi8027) &lt;a href=&quot;https://twitter.com/pi8027/status/272257056407449600?ref_src=twsrc%5Etfw&quot;&gt;November 24, 2012&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;jekyll-twitter-plugin&quot;&gt;&lt;blockquote class=&quot;twitter-tweet&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;&lt;a href=&quot;https://twitter.com/nysalor?ref_src=twsrc%5Etfw&quot;&gt;@nysalor&lt;/a&gt; では tmux neww &amp;#39;echo &lt;a href=&quot;https://twitter.com/search?q=%24PATH&amp;amp;src=ctag&amp;amp;ref_src=twsrc%5Etfw&quot;&gt;$PATH&lt;/a&gt; ; read v&amp;#39; だとどうですか&lt;/p&gt;&amp;mdash; 坂口和彦 (@pi8027) &lt;a href=&quot;https://twitter.com/pi8027/status/272261674784940032?ref_src=twsrc%5Etfw&quot;&gt;November 24, 2012&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;p&gt;おお？PATHの先頭に/usr/binが入っているので、rvmのrubyではなくシステムのrubyが呼び出されているようだ。&lt;/p&gt;
+
+&lt;p&gt;tmux内のプロンプトでecho $PATHすると正常なんだけど、これは&lt;/p&gt;
+
+&lt;div class=&quot;jekyll-twitter-plugin&quot;&gt;&lt;blockquote class=&quot;twitter-tweet&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;&lt;a href=&quot;https://twitter.com/nysalor?ref_src=twsrc%5Etfw&quot;&gt;@nysalor&lt;/a&gt; なるほど。因みに tmux neww のときに呼ばれてる zsh は .zshrc を読んでいないはずなので、それが原因だと思います。パスの設定は .zshenv に書くと上手くいくと思います。&lt;/p&gt;&amp;mdash; 坂口和彦 (@pi8027) &lt;a href=&quot;https://twitter.com/pi8027/status/272275484228849664?ref_src=twsrc%5Etfw&quot;&gt;November 24, 2012&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;p&gt;ということらしい。なるほど！
+pryが起動していたのは&lt;strong&gt;[[ -s &quot;$HOME/.rvm/scripts/rvm&quot; ]] &amp;amp;&amp;amp; source &quot;$HOME/.rvm/scripts/rvm&quot;&lt;/strong&gt;が.zloginに入っていたため・・・なのかな？
+とりあえず.zshenvに&lt;/p&gt;
+
+&lt;p&gt;&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;&lt;script src=&quot;https://gist.github.com/4140170.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;を書き、.zshrcや.zloginからrvmの設定を削除したところ、正常に起動するようになった。&lt;/p&gt;
+
+&lt;p&gt;また、これらのファイルのどれが読み込まれるか、またその順番については&lt;a href=&quot;http://masasuzu.hatenablog.jp/entry/20120506/1336286016&quot;&gt;こちらの記事&lt;/a&gt;が参考になった。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">ここのところqiitaの方ばっかり書いていて放置していたけど、たまにはこちらへ。</summary></entry><entry><title type="html">JOINは遅い？</title><link href="http://localhost:4000/2012/04/join-e3-81-af-e9-81-85-e3-81-84-ef-bc-9f.html" rel="alternate" type="text/html" title="JOINは遅い？" /><published>2012-04-18T00:00:00+09:00</published><updated>2012-04-18T00:00:00+09:00</updated><id>http://localhost:4000/2012/04/join%E3%81%AF%E9%81%85%E3%81%84%3F</id><content type="html" xml:base="http://localhost:4000/2012/04/join-e3-81-af-e9-81-85-e3-81-84-ef-bc-9f.html">&lt;p&gt;ySQLのJOINが遅いというのはよく言われるが、複数回SQLを発行するのとJOINするのがどちらがましなのか疑問だったので、実際どのくらい遅いのか試してみた。&lt;/p&gt;
+
+&lt;p&gt;Rails3.2のプロジェクトを作成し、適当なモデルを作ってconsoleでSQLの実行時間を見る。
+サンプルコードは&lt;a href=&quot;https://github.com/nysalor/rails_join&quot; target=&quot;_blank&quot;&gt;githubに置いた&lt;/a&gt;。
+モデルはUser -&amp;lt; Item -&amp;lt; Extraで、Userは100、Itemは10ずつで1000、Extraは10ずつで合計10000のレコードを作成することにする。
+seed_fuのフィクスチャを使い、rake db:seed_fuで一気にレコードが作成されるようにした。&lt;/p&gt;
+
+&lt;p&gt;この状態（&lt;a href=&quot;https://github.com/nysalor/rails_join/commit/830f6dae26189d4ea83b8753471a166712d50568&quot; target=&quot;_blank&quot;&gt;commit:830f6dae26189d4ea83b8753471a166712d50568&lt;/a&gt;）で全てのエントリを取得させてみた。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;User全件(100件)&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; User.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT `users`.* FROM `users`&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 1.0ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Item全件(100*10件)&lt;/strong&gt;
+&lt;em&gt;1.JOINした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; User.joins&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:items&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT `users`.* FROM `users` INNER JOIN `items` ON `items`.`user_id` = `users`.`id`&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 3.2ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;2.JOINせず複数回SQLした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Item.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:user_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; User.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;:not &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; nil&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `users` WHERE (`users`.`id` IS NOT NULL)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT `items`.* FROM `items` WHERE `items`.`user_id` IN (1..100)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 0.6ms + 4.5ms &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 5.1ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Extra全件(100&lt;em&gt;10&lt;/em&gt;10件)&lt;/strong&gt;
+&lt;em&gt;1.JOINした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; User.joins&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:items &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; :extras&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT `users`.* FROM `users` INNER JOIN `items` ON `items`.`user_id` = `users`.`id` INNER JOIN `extras` ON `extras`.`item_id` = `items`.`id`&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 35.4ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;2.JOINせず複数回SQLした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Extra.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:item_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Item.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:user_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; User.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;:not &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; nil&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;)))&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `users` WHERE (`users`.`id` IS NOT NULL)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `items` WHERE `items`.`user_id` IN (1..100)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT `extras`.* FROM `extras` WHERE `extras`.`item_id` IN (1..1000)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 0.6ms + 1.8ms + 30.9ms &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 33.3ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このケースだとあまり差が出ないので、Extraの件数を10倍にしてみた。（&lt;a href=&quot;https://github.com/nysalor/rails_join/commit/96ee43e9319a363666033ac725950283bb80fab8&quot; target=&quot;_blank&quot;&gt;commit:96ee43e9319a363666033ac725950283bb80fab8&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Extra全件(100&lt;em&gt;10&lt;/em&gt;100件)&lt;/strong&gt;
+&lt;em&gt;1.JOINした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; User.joins&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:items &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; :extras&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT `users`.* FROM `users` INNER JOIN `items` ON `items`.`user_id` = `users`.`id` INNER JOIN `extras` ON `extras`.`item_id` = `items`.`id`&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 358.9ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;2.JOINせず複数回SQLした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Extra.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:item_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Item.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:user_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; User.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;:not &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; nil&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;)))&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `users` WHERE (`users`.`id` IS NOT NULL)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `items` WHERE `items`.`user_id` IN (1..100)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT `extras`.* FROM `extras` WHERE `extras`.`item_id` IN (1..1000)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 0.7ms + 1.9ms + 303.0ms &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 305.6ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;件数が増えるほど差が広がっている。件数が多い時はJOINしない方が良さそうではある。
+まぁ、300msもかかるようだと他の高速化手段を取るべきだろうけど。&lt;/p&gt;
+
+&lt;p&gt;ついでにindexを追加してみた。（&lt;a href=&quot;https://github.com/nysalor/rails_join/commit/bac53fb2569b5a681a6bacad3e8c13535e4aa141&quot; target=&quot;_blank&quot;&gt;commit:bac53fb2569b5a681a6bacad3e8c13535e4aa141&lt;/a&gt;）&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Item全件(100*10件)&lt;/strong&gt;
+&lt;em&gt;1.JOINした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; User.joins&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:items&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT `users`.* FROM `users` INNER JOIN `items` ON `items`.`user_id` = `users`.`id`&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 4.0ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;2.JOINせず複数回SQLした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Item.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:user_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; User.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;:not &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; nil&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `users` WHERE (`users`.`id` IS NOT NULL)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT `items`.* FROM `items` WHERE `items`.`user_id` IN (1..100)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 0.7ms + 4.7ms &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 5.4ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Extra全件(100&lt;em&gt;10&lt;/em&gt;100件)&lt;/strong&gt;
+&lt;em&gt;1.JOINした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; User.joins&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:items &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; :extras&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT `users`.* FROM `users` INNER JOIN `items` ON `items`.`user_id` = `users`.`id` INNER JOIN `extras` ON `extras`.`item_id` = `items`.`id`&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 212.1ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;2.JOINせず複数回SQLした場合&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Extra.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:item_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Item.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:user_id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; User.where&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;:not &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;amp;gt&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; nil&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;.pluck&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;:id&lt;span class=&quot;o&quot;&gt;)))&lt;/span&gt;.all.count
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `users` WHERE (`users`.`id` IS NOT NULL)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT id FROM `items` WHERE `items`.`user_id` IN (1..100)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# SELECT `extras`.* FROM `extras` WHERE `extras`.`item_id` IN (1..1000)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; 0.6ms + 3.3ms + 556.9ms &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 560.8ms
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;む、逆転した。&lt;/p&gt;
+
+&lt;p&gt;以上はローカル環境で適当にやっただけなので、そのうちAWSのインスタンスでも立ててちゃんと調べよう。&lt;/p&gt;
+
+&lt;p&gt;追記：分かりやすいようにSQL入れました。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">ySQLのJOINが遅いというのはよく言われるが、複数回SQLを発行するのとJOINするのがどちらがましなのか疑問だったので、実際どのくらい遅いのか試してみた。</summary></entry><entry><title type="html">続々assets:precompile問題</title><link href="http://localhost:4000/2012/04/e7-b6-9a-e3-80-85assetsprecompile-e5-95-8f-e9-a1-8c.html" rel="alternate" type="text/html" title="続々assets:precompile問題" /><published>2012-04-04T00:00:00+09:00</published><updated>2012-04-04T00:00:00+09:00</updated><id>http://localhost:4000/2012/04/%E7%B6%9A%E3%80%85assetsprecompile%E5%95%8F%E9%A1%8C</id><content type="html" xml:base="http://localhost:4000/2012/04/e7-b6-9a-e3-80-85assetsprecompile-e5-95-8f-e9-a1-8c.html">&lt;p&gt;&lt;a href=&quot;http://blog.larus.jp/?p=508&quot;&gt;先日のエントリ&lt;/a&gt;の最後に書いたprecompileが失敗する問題の続き。
+Rails3.2.3でも解決していなかったので本腰入れて調べてみた。&lt;/p&gt;
+
+&lt;!--more--&gt;
+&lt;p&gt;具体的には、rake assets:precompileを実行すると以下のようなエラーで中断する。&lt;/p&gt;
+
+&lt;p&gt;[text]
+rake aborted!
+undefined method &lt;code class=&quot;highlighter-rouge&quot;&gt;[]' for nil:NilClass
+  (in /path/to/rails_app/app/assets/stylesheets/application.css)
+/path/to/.rvm/gems/ruby-1.9.3-p125/gems/sass-rails-3.2.5/lib/sass/rails/helpers.rb:32:in &lt;/code&gt;resolver’
+/path/to/.rvm/gems/ruby-1.9.3-p125/gems/sass-rails-3.2.5/lib/sass/rails/helpers.rb:22:in &lt;code class=&quot;highlighter-rouge&quot;&gt;image_path'
+/path/to/.rvm/gems/ruby-1.9.3-p125/gems/sass-3.1.15/lib/sass/script/funcall.rb:88:in &lt;/code&gt;_perform’
+以下略
+[/text]&lt;/p&gt;
+
+&lt;p&gt;railsをstableにすると発生しなくなったり3.2.3で復活したり長らく原因不明だったが、&lt;a href=&quot;https://github.com/rails/sass-rails/issues/81&quot; target=&quot;_blank&quot;&gt;githubのこのissue&lt;/a&gt;を追っかけてようやく原因が分かった。&lt;/p&gt;
+
+&lt;p&gt;cssのurlをassetsに対応させるため、erbを埋め込んで以下のようにしていた。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/2299796.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;これはprecompileしない環境（development）だとうまく行くが、assets:precompileを実行すると上記のエラーになる。
+どうやらasset_pathヘルパが[:custom]オプションを要求するのに対し、sassエンジンが[:custom]オプションなしで初期化されるのが原因らしい。
+erbのasset_pathを諦め、styles.css.scssにリネームした上で、以下のように書き換えて解決。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/2299802.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;asset_pathがsassではasset-pathになるのが分からなくてハマった。&lt;a href=&quot;http://guides.rubyonrails.org/asset_pipeline.html&quot; target=&quot;_blank&quot;&gt;RailsGuide&lt;/a&gt;に書いてはあるんだけど例が分かりづらい。
+&lt;a href=&quot;http://rubydoc.info/github/petebrowne/sprockets-sass/master/Sprockets/Sass/Functions#asset_path-instance_method&quot; target=&quot;_blank&quot;&gt;sprocketのドキュメント&lt;/a&gt;の方が分かりやすいかも。
+なお、asset-pathだとimageオプションが必要だが、文字列を生で書くのが気持ち悪い場合、image-pathにするとオプションが不要になる。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/2299813.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;胸のつかえが取れたー。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">先日のエントリの最後に書いたprecompileが失敗する問題の続き。 Rails3.2.3でも解決していなかったので本腰入れて調べてみた。</summary></entry><entry><title type="html">varnish&amp;amp;nginx</title><link href="http://localhost:4000/2012/03/varnishnginx.html" rel="alternate" type="text/html" title="varnish&amp;amp;nginx" /><published>2012-03-21T00:00:00+09:00</published><updated>2012-03-21T00:00:00+09:00</updated><id>http://localhost:4000/2012/03/varnishnginx</id><content type="html" xml:base="http://localhost:4000/2012/03/varnishnginx.html">&lt;p&gt;varnishとnginxを使っているサーバをマイグレーションすることになり、今まで外部のLBを通していたのを直接処理することになった。
+そこで問題になるのはSSLの扱い。varnishはSSLを扱えないため（作者はopensslのコードはクソだ、と&lt;a href=&quot;https://www.varnish-cache.org/docs/trunk/phk/ssl.html&quot; target=&quot;_blank&quot;&gt;一刀両断&lt;/a&gt;している）、httpsのフロントエンドとしては使えない。
+そこで順序を入れ替え、nginxをフロントエンドに、varnishを挟んでunicornに投げるようにした。&lt;/p&gt;
+
+&lt;!--more--&gt;
+&lt;p&gt;具体的には以下の通り。&lt;/p&gt;
+
+&lt;p&gt;旧構成:&lt;strong&gt;LB→varnish→nginx→unicorn&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;新構成:&lt;strong&gt;nginx→varnish→unicorn&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;varnishはUNIX socketに対応していないので（&lt;a href=&quot;https://www.varnish-cache.org/trac/ticket/1020&quot; target=&quot;_blank&quot;&gt;予定はあるようだが&lt;/a&gt;）、unicornを適当なポートで待ち受けさせてやらなければならない。
+静的ファイルはフロントエンドのnginxで直接捌くためvarnishにキャッシュさせることはできなくなるが、nginx単体で充分なパフォーマンスが出るので考えなくていいだろう。&lt;/p&gt;
+
+&lt;p&gt;nginxを80で待ち受けさせて、静的ファイル以外をバックエンドのvarnishに投げ、varnishがさらにバックエンドのunicornに投げる。
+これで問題なく動作しているかに見えたが、実は大きな罠があった。
+varnishはGETリクエストしかキャッシュしないため、POSTについてはそのままバックエンドに丸投げになるはずが、間にnginxが挟まったことで全てのリクエストがGETになってしまう現象が発生した。
+恐らくvclの記述がまずいのだと思うが、とりあえずnginxの方でGETリクエストのみをvarnishに投げ、それ以外は直接unicornに投げるように変更して解決した。
+以下はその設定。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;/etc/nginx/sites-available/default&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;upstream varnish &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        server localhost:8080&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+upstream unicorn-rails &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        server localhost:3000&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        listen 80&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        server_name rails-app-sample.larus.jp&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        root /var/www/rails-app/current/public&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        error_log /var/www/rails-app/current/log/nginx-error.log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        location ~ ^/assets|system/ &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                expires 1y&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                add_header Cache-Control public&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                add_header Last-Modified &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                add_header ETag &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        location &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /favicon.ico &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            root   /var/www/rails-app/current/public/assets&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        location / &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                proxy_set_header X-Real-IP  &lt;span class=&quot;nv&quot;&gt;$remote_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                proxy_set_header X-Forwarded-For &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                proxy_set_header Host &lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$request_method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; GET&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                        proxy_pass http ://varnish&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                        &lt;span class=&quot;c&quot;&gt;# httpの後のスペースは本来は省く&lt;/span&gt;
+                &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+                proxy_pass http ://unicorn-rails&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;c&quot;&gt;# httpの後のスペースは本来は省く&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;/etc/varnish/default.vcl&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;backend rails_app &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  .host &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  .port &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;3000&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  .connect_timeout &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 30s&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+sub vcl_recv &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;req.http.host &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;rails-app-sample.larus.jp&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;req.backend &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; rails_app&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;lookup&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なお、以後スケールする場合はnginxをロードバランサにしてvarnish+unicornの組を増やせば良い。&lt;/p&gt;
+
+&lt;p&gt;しかしvarnishの作者はDJBの同類っぽくてやや不安・・・&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">varnishとnginxを使っているサーバをマイグレーションすることになり、今まで外部のLBを通していたのを直接処理することになった。 そこで問題になるのはSSLの扱い。varnishはSSLを扱えないため（作者はopensslのコードはクソだ、と一刀両断している）、httpsのフロントエンドとしては使えない。 そこで順序を入れ替え、nginxをフロントエンドに、varnishを挟んでunicornに投げるようにした。</summary></entry><entry><title type="html">Emacs23.4</title><link href="http://localhost:4000/2012/03/emacs23-4.html" rel="alternate" type="text/html" title="Emacs23.4" /><published>2012-03-21T00:00:00+09:00</published><updated>2012-03-21T00:00:00+09:00</updated><id>http://localhost:4000/2012/03/emacs23-4</id><content type="html" xml:base="http://localhost:4000/2012/03/emacs23-4.html">&lt;p&gt;久々にEmacsをビルドした。もちろんCocoa Emacs。
+手順はほぼ&lt;a href=&quot;http://henry.animeo.jp/wp/?p=1624&quot; target=&quot;_blank&quot;&gt;この通り&lt;/a&gt;でOK。&lt;/p&gt;
+
+&lt;p&gt;久しぶりにinline patchを当ててみたが、やはりauto-saveとぶつかった時に落ちる。
+（auto-save-buffersは使っていないんだけど）
+これを回避するパッチが&lt;a href=&quot;http://sourceforge.jp/projects/macemacsjp/lists/archive/users/2011-August/001699.html&quot; target=&quot;_blank&quot;&gt;macemacs-jpで流れていた&lt;/a&gt;ので当てる。&lt;/p&gt;
+
+&lt;p&gt;一応、patch -p0で当てられるパッチを作ったので置いておく。&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/2154269.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;一通りパッチを揃えたら以下の手順でビルド。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;patch &lt;span class=&quot;nt&quot;&gt;-p1&lt;/span&gt; &amp;lt; ../emacs-23-lion-fullscreen-test.patch
+patch &lt;span class=&quot;nt&quot;&gt;-p0&lt;/span&gt; &amp;lt; ../inline_patch-svn/emacs-inline.patch
+patch &lt;span class=&quot;nt&quot;&gt;-p1&lt;/span&gt; &amp;lt; ../fix-shiftmodifier-patch-for-emacs-inline-patch.diff
+patch &lt;span class=&quot;nt&quot;&gt;-p0&lt;/span&gt; &amp;lt; ../fix-auto-save-crash.patch
+./configure &lt;span class=&quot;nt&quot;&gt;--with-ns&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--without-x&lt;/span&gt;
+make bootstrap
+make &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ac Mini(Core2Duo 2.4GHz/8G/SSD)でビルド所要時間13分くらい。
+思ったよりも速くなってないけど、まぁCore2Duoだしこんなもんか。i7のMiniかiMac出たら欲しいな。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">久々にEmacsをビルドした。もちろんCocoa Emacs。 手順はほぼこの通りでOK。</summary></entry><entry><title type="html">真空断熱マグ</title><link href="http://localhost:4000/2012/03/e7-9c-9f-e7-a9-ba-e6-96-ad-e7-86-b1-e3-83-9e-e3-82-b0.html" rel="alternate" type="text/html" title="真空断熱マグ" /><published>2012-03-10T00:00:00+09:00</published><updated>2012-03-10T00:00:00+09:00</updated><id>http://localhost:4000/2012/03/%E7%9C%9F%E7%A9%BA%E6%96%AD%E7%86%B1%E3%83%9E%E3%82%B0</id><content type="html" xml:base="http://localhost:4000/2012/03/e7-9c-9f-e7-a9-ba-e6-96-ad-e7-86-b1-e3-83-9e-e3-82-b0.html">&lt;p&gt;真空断熱マグがへこんだので買い換えた。
+何となく毎回別々のメーカーのを買っているので、ここらでちょっとレビューしてみる。
+保温性能とか重量とかはだいたい一緒なので、その他を中心に。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;サーモス「ケータイマグ」&lt;/strong&gt;
+[amazon-product]B001EJNTKY[/amazon-product]&lt;/p&gt;
+
+&lt;p&gt;少し太めで持ちにくいが、その分高さは低い。
+塗装がはげやすく、すぐボロボロになる。リペイントとか楽しめる人にはいいかも。
+蓋のロックはあけやすく、ゆっくり開くのも良い。
+飲み口のパーツが掃除しにくく汚れる。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TIGER「サハラマグ」&lt;/strong&gt;
+[amazon-product]B004L2KQFW[/amazon-product]&lt;/p&gt;
+
+&lt;p&gt;蓋のロックが固くて開けにくい。勢いよく開く上に、角度が足りず鼻にぶつかる。（サイズや人によるかもしれない）
+飲み口は一体化されていて掃除しやすい。
+ボディがコーティングされているので塗装がはげない。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;象印「ステンレスマグ」&lt;/strong&gt;
+[amazon-product]B005FT3HDI[/amazon-product]&lt;/p&gt;
+
+&lt;p&gt;容量が少しだけ少ないが、その分細身で持ちやすい。
+底面がわずかに膨らんでいて安定する。
+蓋のロックが独特で、開けにくい人もいるかも知れない。勢いよく開くが角度がつけられていて飲みやすい。
+飲み口は一体化されていて掃除しやすく、簡易な空気弁がついている。
+ボディはコーティングされているようだ。塗装は今のところはげてないが、時間が経ってないのでまだ不明。
+なお、たまたまかも知れないけど買ったばかりは妙な匂いがあってなかなか取れなかった。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">真空断熱マグがへこんだので買い換えた。 何となく毎回別々のメーカーのを買っているので、ここらでちょっとレビューしてみる。 保温性能とか重量とかはだいたい一緒なので、その他を中心に。</summary></entry><entry><title type="html">capistrano/multistageとdeploy_to</title><link href="http://localhost:4000/2012/03/capistranomultistage-e3-81-a8deploy_to.html" rel="alternate" type="text/html" title="capistrano/multistageとdeploy_to" /><published>2012-03-08T00:00:00+09:00</published><updated>2012-03-08T00:00:00+09:00</updated><id>http://localhost:4000/2012/03/capistranomultistage%E3%81%A8deploy_to</id><content type="html" xml:base="http://localhost:4000/2012/03/capistranomultistage-e3-81-a8deploy_to.html">&lt;p&gt;&lt;a href=&quot;http://blog.larus.jp/?p=512&quot;&gt;前回のエントリ&lt;/a&gt;でnamespaceに起因すると勘違いした不具合。
+capistranoのmultistageでdeploy_toにstageごとに異なるパスを指定すると変になるという話。&lt;/p&gt;
+
+&lt;p&gt;multistageを使っている時に、config/deploy/staging.rbに以下のように書いたとする。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/1999940.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;が、これは期待した動作をしない。deploy:symlinkの時にオーバーライドしたはずのdeploy_toが復活する。もしdeploy.rbでdeploy_toを指定していなければ、デフォルトの/u/apps/#{application}が使われる。&lt;/p&gt;
+
+&lt;p&gt;これを回避するには、staging.rbに以下を追加する必要がある。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/1999947.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;これならdeploy_toが呼び出された時点で評価される。&lt;/p&gt;
+
+&lt;p&gt;しかし、全てのrails_envについて（staging.rb,production.rbなど）同じ内容を書かないといけないのでよろしくない。
+ぱっと見だと難しそうなので、ゆっくりソースを追って考えてみます。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">前回のエントリでnamespaceに起因すると勘違いした不具合。 capistranoのmultistageでdeploy_toにstageごとに異なるパスを指定すると変になるという話。</summary></entry><entry><title type="html">続assets:precompile問題</title><link href="http://localhost:4000/2012/03/e7-b6-9aassetsprecompile-e5-95-8f-e9-a1-8c.html" rel="alternate" type="text/html" title="続assets:precompile問題" /><published>2012-03-07T00:00:00+09:00</published><updated>2012-03-07T00:00:00+09:00</updated><id>http://localhost:4000/2012/03/%E7%B6%9Aassetsprecompile%E5%95%8F%E9%A1%8C</id><content type="html" xml:base="http://localhost:4000/2012/03/e7-b6-9aassetsprecompile-e5-95-8f-e9-a1-8c.html">&lt;p&gt;&lt;a href=&quot;http://blog.larus.jp/?p=508&quot;&gt;先日のエントリ&lt;/a&gt;は色々間違ってました。&lt;/p&gt;
+
+&lt;p&gt;まず、Rails3.2でDBに接続しに行く問題はapplication.rbに&lt;strong&gt;config.assets.initialize_on_precompile = false&lt;/strong&gt;を追加することで回避できるみたい。&lt;a href=&quot;http://guides.rubyonrails.org/asset_pipeline.html&quot; target=&quot;_blank&quot;&gt;RailsGuidesくらいちゃんと読め&lt;/a&gt;って話ですよね。このへんは&lt;a href=&quot;https://twitter.com/search?q=%23shibuyarails&quot; target=&quot;_blank&quot;&gt;先日の勉強会&lt;/a&gt;で教えて貰いました。&lt;/p&gt;
+
+&lt;p&gt;&lt;del datetime=&quot;2012-03-07T08:41:47+00:00&quot;&gt;
+あとdeploy.rbでnamespaceを定義して更新時だけprecompileするコードだけど、multistageを使っているとパスがデフォルトになってしまったりでうまく動作しない。（multistageしてない時には正常動作するはず）
+こちらはちょっと考え直す必要がありそう。うまく行ったらまた紹介します。
+&lt;/del&gt;
+上記、別の問題とごっちゃになってました。そのままのコードで問題なしです。&lt;/p&gt;</content><author><name>nysalor</name></author><summary type="html">先日のエントリは色々間違ってました。</summary></entry></feed>

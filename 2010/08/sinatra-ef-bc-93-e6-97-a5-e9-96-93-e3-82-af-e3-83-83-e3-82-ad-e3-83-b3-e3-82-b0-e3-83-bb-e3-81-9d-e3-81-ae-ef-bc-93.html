@@ -1,0 +1,334 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Sinatra３日間クッキング・その３ - Proxima Fermata</title>
+<meta name="description" content="SInatraでなんか作ってみようその３。 shotgunの使い方とpagenationのやり方。 ">
+
+
+  <meta name="author" content="nysalor">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Proxima Fermata">
+<meta property="og:title" content="Sinatra３日間クッキング・その３">
+<meta property="og:url" content="http://localhost:4000/2010/08/sinatra-ef-bc-93-e6-97-a5-e9-96-93-e3-82-af-e3-83-83-e3-82-ad-e3-83-b3-e3-82-b0-e3-83-bb-e3-81-9d-e3-81-ae-ef-bc-93.html">
+
+
+  <meta property="og:description" content="SInatraでなんか作ってみようその３。 shotgunの使い方とpagenationのやり方。 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2010-08-13T00:00:00+09:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/2010/08/sinatra-ef-bc-93-e6-97-a5-e9-96-93-e3-82-af-e3-83-83-e3-82-ad-e3-83-b3-e3-82-b0-e3-83-bb-e3-81-9d-e3-81-ae-ef-bc-93.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Proxima Fermata Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--archive">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Proxima Fermata
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/blog" >blog</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio.jpg" alt="nysalor" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">nysalor</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>none.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">YOS</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">Sinatra３日間クッキング・その３</h1>
+    
+    <p>SInatraでなんか作ってみようその３。
+shotgunの使い方とpagenationのやり方。</p>
+
+<!--more-->
+<p>ここまでできたら、ruby server.rbとかやるだけでhttp://localhost:4567/で動作してしまうが、最初に書いた通り開発中はshotgunを使わないと、スクリプトを書き換える度にCTRL+Cで止めて立ち上げ直すことになってめんどくさい。余談だけど、sinatraを止めると「sinatraはセッションを終える（観衆は拍手した）」とか出てきてかっこいい。
+閑話休題、shotgunで立ち上げるには、</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shotgun server.rb <span class="nt">-p</span> 4567 <span class="nt">-s</span> mongrel
+</code></pre></div></div>
+<p>と、ポートとサーバを指定してやる必要があった。もちろんwebrickでもthinでも何でもいい、はず。
+これでブラウザでアクセスする度にスクリプトが再読み込みされる。後は適当に書いていくだけ。
+なお、本番環境では上記のshotgunをrubyに変えるだけでOK。</p>
+
+<p>もう一つ引っかかったのはpagenation。情報が少ないんだよね。</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Sequel</span><span class="p">.</span><span class="nf">extension</span> <span class="ss">:pagination</span>
+</code></pre></div></div>
+<p>を宣言しておいて、コントローラで</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">get</span> <span class="s1">'/all/:page'</span> <span class="k">do</span>
+  <span class="vi">@page</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="ss">:page</span><span class="p">].</span><span class="nf">to_i</span>
+  <span class="vi">@items</span> <span class="o">=</span> <span class="no">Items</span><span class="p">.</span><span class="nf">order_by</span><span class="p">(</span><span class="ss">:id</span><span class="p">.</span><span class="nf">desc</span><span class="p">).</span><span class="nf">paginate</span><span class="p">(</span><span class="vi">@page</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+  <span class="n">erb</span> <span class="ss">:index</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>としておけば、ビューで@items.current_pageなどのメソッドが使えるようになる。
+その他<a href="http://sequel.rubyforge.org/rdoc-plugins/classes/Sequel/Dataset/Pagination.html">利用可能なメソッド一覧</a>。</p>
+
+<p>以上、初めてなので３日くらいかかってしまったが（うち１日はhamlの記法に悩み、１日はpaginationで悩んでいた）、次回からはほんとに数時間で書けてしまうと思う。
+まぁ、今回はイントラでしか使わないのでここで終了だけど、ちゃんと動かそうと思うとリバースプロキシとかやらないといけないんで、そのへんの手間はRailsアプリをデプロイする時とあまり変わらないかも知れない。
+ともあれ、短時間で何かでっち上げたい時には便利なんじゃないでしょうか。あと簡潔に書けるので教育に良いかも。</p>
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Proxima Fermata. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

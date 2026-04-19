@@ -1,0 +1,333 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>IRC - Proxima Fermata</title>
+<meta name="description" content="未だにIRCをけっこう使ってるんだけども、ここ数ヶ月様子がおかしい。 発言の多いチャンネル（にJOINしているサーバ）からランダムに切断されるようになってしまった。 正確には、クライアントが切断と判断して再接続するんだけど、サーバ側にはまだ自分が残っていて、しばらくするとtimeoutするという状態。 IRCクライアントの設定を色々いじったけど全く改善しないので、根本的に原因を調べることにした。 ">
+
+
+  <meta name="author" content="nysalor">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Proxima Fermata">
+<meta property="og:title" content="IRC">
+<meta property="og:url" content="http://localhost:4000/2010/05/irc.html">
+
+
+  <meta property="og:description" content="未だにIRCをけっこう使ってるんだけども、ここ数ヶ月様子がおかしい。 発言の多いチャンネル（にJOINしているサーバ）からランダムに切断されるようになってしまった。 正確には、クライアントが切断と判断して再接続するんだけど、サーバ側にはまだ自分が残っていて、しばらくするとtimeoutするという状態。 IRCクライアントの設定を色々いじったけど全く改善しないので、根本的に原因を調べることにした。 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2010-05-10T00:00:00+09:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/2010/05/irc.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Proxima Fermata Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--archive">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Proxima Fermata
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/blog" >blog</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio.jpg" alt="nysalor" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">nysalor</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>none.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">YOS</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">IRC</h1>
+    
+    <p>未だにIRCをけっこう使ってるんだけども、ここ数ヶ月様子がおかしい。
+発言の多いチャンネル（にJOINしているサーバ）からランダムに切断されるようになってしまった。
+正確には、クライアントが切断と判断して再接続するんだけど、サーバ側にはまだ自分が残っていて、しばらくするとtimeoutするという状態。
+IRCクライアントの設定を色々いじったけど全く改善しないので、根本的に原因を調べることにした。</p>
+
+<!--more-->
+<p>というわけでまずは<a href="http://www.wireshark.org/">WireShark</a>（旧Ethereal）をインストールしてパケットを観察。うっかりHDDに残っていたEtherealをインストールしようとしてできなかったのは秘密だ。
+フィルタを「ip.addr == xxx.xxx.xxx.xxx」（IRCサーバのアドレス）に設定。IRCクライアントの方もラウンドロビンのホストではなく、サーバを決め打ちに設定しておく。
+そして流れの速いチャンネルに繋ぎ、じーっと観察。</p>
+
+<p>5558	19:33:08.121560	192.168.xxx.xxx	xxx.xxx.xxx.xxx	TCP	[TCP Retransmission] agentsease-db &gt; ircu [PSH, ACK] Seq=2650 Ack=61672 Win=65361 Len=47</p>
+
+<p>が7回流れた後に切れた。パケットの中身は発言だったり、クライアントが定期的に送信しているCTCP PONGだったり色々。
+どうもこちらから何かアクションを起こした時にTCPの再送を繰り返して、それが一定回数になるとクライアント側が切断してしまうらしい。
+何度か見ていると、毎回7回再送→切断というパターンになっている。</p>
+
+<p>次に、ルータ（FreeBSD）でtcpdumpを起動して調べてみる。ちなみにipfilterを使っているので、kernelは既にプロミスキャスモードが可能なようにコンパイルされている。</p>
+<h1 id="tcpdump--vv--l--n--i-ng0-host-xxxxxxxxxxxx--tee-tcpdumplog">tcpdump -vv -l -n -i ng0 host xxx.xxx.xxx.xxx | tee tcpdump.log</h1>
+<p>とかやってログを取りつつ観察。ちなみにng0はPPPoEドライバmpd4のインターフェイス名。</p>
+
+<p>切断された時に、Wiresharkと付き合わせて同じシーケンス番号のパケットを探す。</p>
+
+<p>19:33:06.599574 IP (tos 0x0, ttl 127, id 45469, offset 0, flags [DF], proto: TCP (6), length: 40) zzz.zzz.zzz.zzz.3997 &gt; xxx.xxx.xxx.xxx.6669: ., cksum 0xa883 (correct), 2650:2650(0) ack 61672 win 65361</p>
+
+<p>うーん、よくわからない（こら）
+まぁ少なくともng0からは出て行ってるので（zzz.zzz.zzz.zzzはWAN側アドレス）、ipfilterがブロックしてるとかNATが働いてないとかいうのではなさそう。
+tcpdumpはちっと分かりにくいので、他のパケットダンプを試してみよう。以下次号。</p>
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Proxima Fermata. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

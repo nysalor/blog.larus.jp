@@ -1,0 +1,347 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>続々assets:precompile問題 - Proxima Fermata</title>
+<meta name="description" content="先日のエントリの最後に書いたprecompileが失敗する問題の続き。 Rails3.2.3でも解決していなかったので本腰入れて調べてみた。 ">
+
+
+  <meta name="author" content="nysalor">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Proxima Fermata">
+<meta property="og:title" content="続々assets:precompile問題">
+<meta property="og:url" content="http://localhost:4000/2012/04/e7-b6-9a-e3-80-85assetsprecompile-e5-95-8f-e9-a1-8c.html">
+
+
+  <meta property="og:description" content="先日のエントリの最後に書いたprecompileが失敗する問題の続き。 Rails3.2.3でも解決していなかったので本腰入れて調べてみた。 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2012-04-04T00:00:00+09:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/2012/04/e7-b6-9a-e3-80-85assetsprecompile-e5-95-8f-e9-a1-8c.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Proxima Fermata Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--archive">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Proxima Fermata
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/blog" >blog</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio.jpg" alt="nysalor" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">nysalor</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>none.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">YOS</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">続々assets:precompile問題</h1>
+    
+    <p><a href="http://blog.larus.jp/?p=508">先日のエントリ</a>の最後に書いたprecompileが失敗する問題の続き。
+Rails3.2.3でも解決していなかったので本腰入れて調べてみた。</p>
+
+<!--more-->
+<p>具体的には、rake assets:precompileを実行すると以下のようなエラーで中断する。</p>
+
+<p>[text]
+rake aborted!
+undefined method <code class="highlighter-rouge">[]' for nil:NilClass
+  (in /path/to/rails_app/app/assets/stylesheets/application.css)
+/path/to/.rvm/gems/ruby-1.9.3-p125/gems/sass-rails-3.2.5/lib/sass/rails/helpers.rb:32:in </code>resolver’
+/path/to/.rvm/gems/ruby-1.9.3-p125/gems/sass-rails-3.2.5/lib/sass/rails/helpers.rb:22:in <code class="highlighter-rouge">image_path'
+/path/to/.rvm/gems/ruby-1.9.3-p125/gems/sass-3.1.15/lib/sass/script/funcall.rb:88:in </code>_perform’
+以下略
+[/text]</p>
+
+<p>railsをstableにすると発生しなくなったり3.2.3で復活したり長らく原因不明だったが、<a href="https://github.com/rails/sass-rails/issues/81" target="_blank">githubのこのissue</a>を追っかけてようやく原因が分かった。</p>
+
+<p>cssのurlをassetsに対応させるため、erbを埋め込んで以下のようにしていた。</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/2299796.js"> </script>
+
+<p>これはprecompileしない環境（development）だとうまく行くが、assets:precompileを実行すると上記のエラーになる。
+どうやらasset_pathヘルパが[:custom]オプションを要求するのに対し、sassエンジンが[:custom]オプションなしで初期化されるのが原因らしい。
+erbのasset_pathを諦め、styles.css.scssにリネームした上で、以下のように書き換えて解決。</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/2299802.js"> </script>
+
+<p>asset_pathがsassではasset-pathになるのが分からなくてハマった。<a href="http://guides.rubyonrails.org/asset_pipeline.html" target="_blank">RailsGuide</a>に書いてはあるんだけど例が分かりづらい。
+<a href="http://rubydoc.info/github/petebrowne/sprockets-sass/master/Sprockets/Sass/Functions#asset_path-instance_method" target="_blank">sprocketのドキュメント</a>の方が分かりやすいかも。
+なお、asset-pathだとimageオプションが必要だが、文字列を生で書くのが気持ち悪い場合、image-pathにするとオプションが不要になる。</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/2299813.js"> </script>
+
+<p>胸のつかえが取れたー。</p>
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Proxima Fermata. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

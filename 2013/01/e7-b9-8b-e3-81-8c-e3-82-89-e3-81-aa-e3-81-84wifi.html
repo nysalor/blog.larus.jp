@@ -1,0 +1,368 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.18.1 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>繋がらないWiFi - Proxima Fermata</title>
+<meta name="description" content="東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。 Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。 なぜ繋がりにくくなるのか、繋がるようにするにはどうすればいいのか、自分の経験を交えて少し考察してみます。 なお、無線通信の専門家ではないので、間違っていることを書いていたら指摘していただけると幸いです。 ">
+
+
+  <meta name="author" content="nysalor">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Proxima Fermata">
+<meta property="og:title" content="繋がらないWiFi">
+<meta property="og:url" content="http://localhost:4000/2013/01/e7-b9-8b-e3-81-8c-e3-82-89-e3-81-aa-e3-81-84wifi.html">
+
+
+  <meta property="og:description" content="東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。 Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。 なぜ繋がりにくくなるのか、繋がるようにするにはどうすればいいのか、自分の経験を交えて少し考察してみます。 なお、無線通信の専門家ではないので、間違っていることを書いていたら指摘していただけると幸いです。 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2013-01-31T00:00:00+09:00">
+
+
+
+
+
+
+<link rel="canonical" href="http://localhost:4000/2013/01/e7-b9-8b-e3-81-8c-e3-82-89-e3-81-aa-e3-81-84wifi.html">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "http://localhost:4000/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Proxima Fermata Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--archive">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Proxima Fermata
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/blog" >blog</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/bio.jpg" alt="nysalor" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">nysalor</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>none.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">YOS</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="https://twitter.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+          
+        
+          
+            <li><a href="https://github.com/nysalor" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 id="page-title" class="page__title">繋がらないWiFi</h1>
+    
+    <p>東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。
+Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。
+なぜ繋がりにくくなるのか、繋がるようにするにはどうすればいいのか、自分の経験を交えて少し考察してみます。
+なお、無線通信の専門家ではないので、間違っていることを書いていたら指摘していただけると幸いです。</p>
+
+<!--more-->
+<p>移動体通信とポータブルルータもかなり普及してきて、エンジニアなら大抵持っているどころか、２つ以上持っているという人も割と多いのではないでしょうか。いわゆるテザリングも原理としては同じです。
+こうしたルータとPC等の機器の間は、多くの場合WiFiで接続されます。ほとんどのルータはIEEE802.11g/n規格になっていて、これは2.4GHz〜2.5GHzの帯域を利用します。
+WiFiの電波は「チャンネル」という分け方をされていますが、これは周波数帯を20MHzで区切って「ここからここまでの周波数帯は何チャンネル」という意味です。もし、一つのチャンネルをいくつもの無線機器が利用しようとすると、電波がお互いに干渉を起こし、伝送エラーが頻発します。TCP/IPはエラーパケットがあれば再送を要求するため、混雑は爆発的に増大し、やがて輻輳（通信要求が過大になって繋がらなくなること）を起こします。</p>
+
+<p>チャンネルをうまく棲み分けできれば問題は発生しにくくなるように思えますが、実はチャンネル同士は完全に独立しているわけではなく、スペクトラム拡散によって前後のチャンネル（で確保している周波数）にも電波が飛んでいます。
+<a href="https://play.google.com/store/apps/details?id=com.farproc.wifi.analyzer&amp;hl=ja" target="_blank">WiFiアナライザー</a>のようなツールを使って調べると、電波が指定したチャンネルを中心に山形になっているのが分かると思います。
+隣接するチャンネル同士が混雑すると、やがて同様に輻輳が発生すると思われます。</p>
+
+<p>加えて、多くの人はルータのチャンネル設定を「自動」にしていると思いますが、これが曲者で、「自動」は「ルータを起動した時に空いているチャンネルを探す」ようになっています。家庭やオフィスで固定して使っている場合にはそれでも問題ないことがほとんどですが、ポータブルルータはずっと電源を入れっぱなしということも多く、「起動した時に空いていたチャンネル」を頑なに維持するため、空いているチャンネルを使うとは限りません。と言うかアナライザーで調べてみると分かるのですが、ほとんどのポータブルルータはチャンネル「1」を利用しています。起動した時に周囲にWiFi機器が存在しなかったのでそのままなのでしょう。</p>
+
+<div class="responsive-image">
+  <img class="responsive-image__placeholder" src="/assets/images/resized/480/716759837.jpg" />
+  <div class="responsive-image__delayed" data-src="/assets/resized/{width}/716759837.jpg"></div>
+</div>
+
+<script>
+new Imager('.responsive-image__delayed', {
+    availableWidths: [480],
+    onImagesReplaced: function() {
+        $('.responsive-image__placeholder').hide()
+    }
+})
+</script>
+
+<p style="text-align: center;">全く繋がらなくなっていた東京Ruby会議メインホールのWiFi状況。</p>
+<p>また、ここでは詳しく述べませんが、携帯やスマートフォンで利用する3GやLTE回線も大勢の人が集まれば輻輳します。（LTEの方が速度が速い分輻輳しにくいと思われます）</p>
+
+<p>3Gが輻輳すると、携帯は空いている周波数を探し始めるので、電池が急速に消耗するという副次的な問題も発生します。</p>
+
+<p>さて、それではイベント等で大勢の人が集まる時、輻輳を回避するにはどうすればいいかを考えてみます。</p>
+
+<p>まず大原則として、各自が持参するポケットルータの電源は切ってもらいましょう（スマートフォンはテザリングを無効にする）。たまに「回線を使わせて貰うのは申し訳ない」と言ってわざわざ自前の回線を使おうとする人がいますが、百害あって一利なしです。周波数帯は有限の資源ということを忘れないようにしましょう。</p>
+
+<p>次に、なるべく同時接続数の多い無線LANアクセスポイントを用意します。家庭用のブロードバンドルータ等は同時接続数が少なく、チャンネルが輻輳するより遥かに前に接続障害が起きてしまいます。法人向けのモデルでは50〜100クライアントが接続可能なものもあります。接続数の少ないルータを多数持ち寄るなどの場合、チャンネルをうまくずらし、設置する場所を検討するなどして干渉を避けるべきです。後述するRubykaigiの実例が参考になると思います。</p>
+
+<p>複数のアクセスポイントを設置する場合、理想的には使用しているチャンネルの前後２チャンネルずつを空けて、５チャンネルずつ利用するのが最も干渉が少なくなると思われます。すると実質的に利用できるのは1/5/9/13の４チャンネルになります。若干の干渉を許容するなら1/4/7/10/13の５チャンネルでも良いかも知れません。参加者の人数、WiFi利用率、会場の広さなどを検討し、最適な配置を考えると良いかと思います。また、アクセスポイントが均等に利用されるような工夫も必要です。</p>
+
+<div class="responsive-image">
+  <img class="responsive-image__placeholder" src="/assets/images/resized/480/wifi.jpg" />
+  <div class="responsive-image__delayed" data-src="/assets/resized/{width}/wifi.jpg"></div>
+</div>
+
+<script>
+new Imager('.responsive-image__delayed', {
+    availableWidths: [480, 800],
+    onImagesReplaced: function() {
+        $('.responsive-image__placeholder').hide()
+    }
+})
+</script>
+
+<p> </p>
+<p style="text-align: center;">ネットワーク設計を手伝った某イベント会場のWiFi状況。
+４つのアクセスポイントを干渉しないように設置。会場収容限度が200人程度なので、この位で十分と判断した。
+４つの大きな山以外は近隣のWiFi。</p>
+<p>さらに巨大なイベントになると、キャッシュサーバの利用、TCPセッションのタイムアウトを極小にするなどの工夫が必要になります。これについては、素晴らしいネットワーク環境を提供していただいた2011年のRubykaigiについて、構築を担当した小岩さんが<a href="http://jp.rubyist.net/magazine/?0035-MakingOfRubyKaigi02" target="_blank">るびまに寄稿した記事</a>を読んでいただくのが良いと思います。大変参考になる記事です。</p>
+
+  </div>
+</div>
+    </div>
+
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Proxima Fermata. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
