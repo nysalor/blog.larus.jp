@@ -11,6 +11,11 @@ plugins:
   - jekyll-sitemap
   - jekyll-feed
 
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+
 permalink: /:year/:month/:title.html
 
 exclude:
