@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    capistrano/multistageとdeploy_to - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="前回のエントリでnamespaceに起因すると勘違いした不具合。 capistranoのmultistageでdeploy_toにstageごとに異なるパスを指定すると変になるという話。">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <link rel="canonical" href="https://blog.larus.jp/2012/03/capistranomultistage-e3-81-a8deploy_to.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>capistrano/multistageとdeploy_to</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on March 08, 2012 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p><a href="http://blog.larus.jp/?p=512">前回のエントリ</a>でnamespaceに起因すると勘違いした不具合。 capistranoのmultistageでdeploy_toにstageごとに異なるパスを指定すると変になるという話。</p>
+
+<p>multistageを使っている時に、config/deploy/staging.rbに以下のように書いたとする。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>400: Invalid request
+</code></pre></div></div>
+
+<p>が、これは期待した動作をしない。deploy:symlinkの時にオーバーライドしたはずのdeploy_toが復活する。もしdeploy.rbでdeploy_toを指定していなければ、デフォルトの/u/apps/#{application}が使われる。</p>
+
+<p>これを回避するには、staging.rbに以下を追加する必要がある。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>400: Invalid request
+</code></pre></div></div>
+
+<p>これならdeploy_toが呼び出された時点で評価される。</p>
+
+<p>しかし、全てのrails_envについて（staging.rb,production.rbなど）同じ内容を書かないといけないのでよろしくない。 ぱっと見だと難しそうなので、ゆっくりソースを追って考えてみます。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2012/03/e7-b6-9aassetsprecompile-e5-95-8f-e9-a1-8c.html" data-toggle="tooltip" data-placement="top" title="続assets:precompile問題">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2012/03/e7-9c-9f-e7-a9-ba-e6-96-ad-e7-86-b1-e3-83-9e-e3-82-b0.html" data-toggle="tooltip" data-placement="top" title="真空断熱マグ">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>

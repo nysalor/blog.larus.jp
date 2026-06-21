@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    rvm - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="acBookAirにruby開発環境を構築する際に、元から入っているrubyとMacPortsで入れたrubyでgemがごっちゃになってしまい、訳が分からなくなってしまった。 まぁ、今時sudo gem installとかやってるのはアレですよね。 と言うわけでrvmをインストールしてユーザ環境以下で管理すること...">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <link rel="canonical" href="https://blog.larus.jp/2011/01/rvm.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>rvm</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on January 15, 2011 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>acBookAirにruby開発環境を構築する際に、元から入っているrubyとMacPortsで入れたrubyでgemがごっちゃになってしまい、訳が分からなくなってしまった。 まぁ、今時sudo gem installとかやってるのはアレですよね。 と言うわけでrvmをインストールしてユーザ環境以下で管理することにした。</p>
+
+<p>gemで入れてもいいけど、システムに食い込まないのでソースからの方がむしろ簡単かと。 まず、適当なディレクトリにrvmのリポジトリをcloneしてからインストール。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git://github.com/wayneeseguin/rvm.git
+cd rvm/
+./install
+</code></pre></div></div>
+
+<p>rvmの正体はシェルスクリプトなので、後は.zshrcの最後に</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[[ -s "$HOME/.rvm/scripts/rvm" ]] &amp;&amp; source "$HOME/.rvm/scripts/rvm"
+</code></pre></div></div>
+
+<p>を追加。sourceで読み込んで、</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rvm install 1.8.7
+rvm use ruby-1.8.7
+</code></pre></div></div>
+
+<p>でとりあえず1.8.7を使うようにする。 念のため、.zshrcの最後にもrvm use ruby-1.8.7を入れておいた。</p>
+
+<p>以後はgemが~/.rvm/gems以下に入るようになるので、デフォルトで入っているrubyが〜とか悩まなくて良い。 1.9.2環境との併用とかについては後でまた。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2011/01/ruby1-9-2.html" data-toggle="tooltip" data-placement="top" title="ruby1.9.2">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2011/01/e7-b6-9arvm.html" data-toggle="tooltip" data-placement="top" title="続rvm">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>

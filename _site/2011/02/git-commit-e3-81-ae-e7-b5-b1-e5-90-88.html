@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    git commitの統合 - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="gitで過去のcommitを統合する方法。 直したつもりで直ってなかった時や、やむなく作業途中でcommitしたのを消した いときに便利。 これ使えばこないだの履歴消去は不要だった気がする… git rebase -i HEAD~5">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <link rel="canonical" href="https://blog.larus.jp/2011/02/git-commit-e3-81-ae-e7-b5-b1-e5-90-88.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>git commitの統合</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on February 17, 2011 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>gitで過去のcommitを統合する方法。 直したつもりで直ってなかった時や、やむなく作業途中でcommitしたのを消した いときに便利。 これ使えばこないだの履歴消去は不要だった気がする…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git rebase -i HEAD~5
+</code></pre></div></div>
+
+<p>とするとエディタが開いて、こんな一覧が出てくる。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pick xxxxxxx 新機能追加！
+pick xxxxxxx なんか動かないので修正
+pick xxxxxxx やっぱり動かないのでもう一度修正
+pick xxxxxxx 今度こそ修正完了！
+pick xxxxxxx コメントにtypoがあったぞコラ
+</code></pre></div></div>
+
+<p>一番下が最新のcommitなので注意。 これを</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pick xxxxxxx 新機能追加！
+squash xxxxxxx なんか動かないので修正
+squash xxxxxxx やっぱり動かないのでもう一度修正
+squash xxxxxxx 今度こそ修正完了！
+squash xxxxxxx コメントにtypoがあったぞコラ
+</code></pre></div></div>
+
+<p>に変更してエディタを終了すると、通常のcommitと同様に再度エディタが開くの で、何食わぬ顔で</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>新機能を追加
+バグはありません！
+</code></pre></div></div>
+
+<p>とか書いてcommit完了すれば、悪戦苦闘した歴史は抹消される。素晴らしい。 なお、pickをeditにするとコメント書き換えになります。git commit –amendの過去バージョン？</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2011/02/shell-pop-el.html" data-toggle="tooltip" data-placement="top" title="shell-pop.el">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2011/03/e3-83-87-e3-82-a3-e3-82-b9-e3-82-af-e3-82-af-e3-83-a9-e3-83-83-e3-82-b7-e3-83-a5-e6-97-a5-e8-a8-98-e3-81-84-e3-81-a1-e3-81-ab-e3-81-a1-e3-82-81.html" data-toggle="tooltip" data-placement="top" title="ディスククラッシュ日記 いちにちめ">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>

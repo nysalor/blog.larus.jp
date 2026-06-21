@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    繋がらないWiFi - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。 Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。 なぜ繋がりにくくなるのか、...">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <link rel="canonical" href="https://blog.larus.jp/2013/01/e7-b9-8b-e3-81-8c-e3-82-89-e3-81-aa-e3-81-84wifi.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>繋がらないWiFi</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on January 31, 2013 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>東京Ruby会議に参加して、ネットが繋がらない！と嘆いている人を大勢見ました。 Ruby会議に限らず、最近の勉強会やイベントは公式のハッシュタグがあり、Twitterで感想や突っ込みを入れるのがお約束になっていますが、参加者の多いイベントではネットが繋がりにくくなることが増えています。 なぜ繋がりにくくなるのか、繋がるようにするにはどうすればいいのか、自分の経験を交えて少し考察してみます。 なお、無線通信の専門家ではないので、間違っていることを書いていたら指摘していただけると幸いです。</p>
+
+<p>移動体通信とポータブルルータもかなり普及してきて、エンジニアなら大抵持っているどころか、２つ以上持っているという人も割と多いのではないでしょうか。いわゆるテザリングも原理としては同じです。 こうしたルータとPC等の機器の間は、多くの場合WiFiで接続されます。ほとんどのルータはIEEE802.11g/n規格になっていて、これは2.4GHz〜2.5GHzの帯域を利用します。 WiFiの電波は「チャンネル」という分け方をされていますが、これは周波数帯を20MHzで区切って「ここからここまでの周波数帯は何チャンネル」という意味です。もし、一つのチャンネルをいくつもの無線機器が利用しようとすると、電波がお互いに干渉を起こし、伝送エラーが頻発します。TCP/IPはエラーパケットがあれば再送を要求するため、混雑は爆発的に増大し、やがて輻輳（通信要求が過大になって繋がらなくなること）を起こします。</p>
+
+<p>チャンネルをうまく棲み分けできれば問題は発生しにくくなるように思えますが、実はチャンネル同士は完全に独立しているわけではなく、スペクトラム拡散によって前後のチャンネル（で確保している周波数）にも電波が飛んでいます。 <a href="https://play.google.com/store/apps/details?id=com.farproc.wifi.analyzer&amp;hl=ja">WiFiアナライザー</a>のようなツールを使って調べると、電波が指定したチャンネルを中心に山形になっているのが分かると思います。 隣接するチャンネル同士が混雑すると、やがて同様に輻輳が発生すると思われます。</p>
+
+<p>加えて、多くの人はルータのチャンネル設定を「自動」にしていると思いますが、これが曲者で、「自動」は「ルータを起動した時に空いているチャンネルを探す」ようになっています。家庭やオフィスで固定して使っている場合にはそれでも問題ないことがほとんどですが、ポータブルルータはずっと電源を入れっぱなしということも多く、「起動した時に空いていたチャンネル」を頑なに維持するため、空いているチャンネルを使うとは限りません。と言うかアナライザーで調べてみると分かるのですが、ほとんどのポータブルルータはチャンネル「1」を利用しています。起動した時に周囲にWiFi機器が存在しなかったのでそのままなのでしょう。</p>
+
+<p><img src="/assets/images/resized/480/716759837.jpg" alt="" /></p>
+
+<p>全く繋がらなくなっていた東京Ruby会議メインホールのWiFi状況。</p>
+
+<p>また、ここでは詳しく述べませんが、携帯やスマートフォンで利用する3GやLTE回線も大勢の人が集まれば輻輳します。（LTEの方が速度が速い分輻輳しにくいと思われます）</p>
+
+<p>3Gが輻輳すると、携帯は空いている周波数を探し始めるので、電池が急速に消耗するという副次的な問題も発生します。</p>
+
+<p>さて、それではイベント等で大勢の人が集まる時、輻輳を回避するにはどうすればいいかを考えてみます。</p>
+
+<p>まず大原則として、各自が持参するポケットルータの電源は切ってもらいましょう（スマートフォンはテザリングを無効にする）。たまに「回線を使わせて貰うのは申し訳ない」と言ってわざわざ自前の回線を使おうとする人がいますが、百害あって一利なしです。周波数帯は有限の資源ということを忘れないようにしましょう。</p>
+
+<p>次に、なるべく同時接続数の多い無線LANアクセスポイントを用意します。家庭用のブロードバンドルータ等は同時接続数が少なく、チャンネルが輻輳するより遥かに前に接続障害が起きてしまいます。法人向けのモデルでは50〜100クライアントが接続可能なものもあります。接続数の少ないルータを多数持ち寄るなどの場合、チャンネルをうまくずらし、設置する場所を検討するなどして干渉を避けるべきです。後述するRubykaigiの実例が参考になると思います。</p>
+
+<p>複数のアクセスポイントを設置する場合、理想的には使用しているチャンネルの前後２チャンネルずつを空けて、５チャンネルずつ利用するのが最も干渉が少なくなると思われます。すると実質的に利用できるのは1/5/9/13の４チャンネルになります。若干の干渉を許容するなら1/4/7/10/13の５チャンネルでも良いかも知れません。参加者の人数、WiFi利用率、会場の広さなどを検討し、最適な配置を考えると良いかと思います。また、アクセスポイントが均等に利用されるような工夫も必要です。</p>
+
+<p><img src="/assets/images/resized/480/wifi.jpg" alt="" /></p>
+
+<p>ネットワーク設計を手伝った某イベント会場のWiFi状況。 ４つのアクセスポイントを干渉しないように設置。会場収容限度が200人程度なので、この位で十分と判断した。 ４つの大きな山以外は近隣のWiFi。</p>
+
+<p>さらに巨大なイベントになると、キャッシュサーバの利用、TCPセッションのタイムアウトを極小にするなどの工夫が必要になります。これについては、素晴らしいネットワーク環境を提供していただいた2011年のRubykaigiについて、構築を担当した小岩さんが<a href="http://jp.rubyist.net/magazine/?0035-MakingOfRubyKaigi02">るびまに寄稿した記事</a>を読んでいただくのが良いと思います。大変参考になる記事です。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2013/01/e6-9d-b1-e4-ba-acruby-e4-bc-9a-e8-ad-b010.html" data-toggle="tooltip" data-placement="top" title="東京Ruby会議10">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2023/06/redos-attack.html" data-toggle="tooltip" data-placement="top" title="本当は怖いReDoS攻撃">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>

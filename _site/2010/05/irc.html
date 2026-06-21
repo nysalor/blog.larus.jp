@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    IRC - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="未だにIRCをけっこう使ってるんだけども、ここ数ヶ月様子がおかしい。 発言の多いチャンネル（にJOINしているサーバ）からランダムに切断されるようになってしまった。 正確には、クライアントが切断と判断して再接続するんだけど、サーバ側にはまだ自分が残っていて、しばらくするとtimeoutするという状態。 IRCクラ...">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <link rel="canonical" href="https://blog.larus.jp/2010/05/irc.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>IRC</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on May 10, 2010 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>未だにIRCをけっこう使ってるんだけども、ここ数ヶ月様子がおかしい。 発言の多いチャンネル（にJOINしているサーバ）からランダムに切断されるようになってしまった。 正確には、クライアントが切断と判断して再接続するんだけど、サーバ側にはまだ自分が残っていて、しばらくするとtimeoutするという状態。 IRCクライアントの設定を色々いじったけど全く改善しないので、根本的に原因を調べることにした。</p>
+
+<p>というわけでまずは<a href="http://www.wireshark.org/">WireShark</a>（旧Ethereal）をインストールしてパケットを観察。うっかりHDDに残っていたEtherealをインストールしようとしてできなかったのは秘密だ。 フィルタを「ip.addr == xxx.xxx.xxx.xxx」（IRCサーバのアドレス）に設定。IRCクライアントの方もラウンドロビンのホストではなく、サーバを決め打ちに設定しておく。 そして流れの速いチャンネルに繋ぎ、じーっと観察。</p>
+
+<p>5558 19:33:08.121560 192.168.xxx.xxx xxx.xxx.xxx.xxx TCP [TCP Retransmission] agentsease-db &gt; ircu [PSH, ACK] Seq=2650 Ack=61672 Win=65361 Len=47</p>
+
+<p>が7回流れた後に切れた。パケットの中身は発言だったり、クライアントが定期的に送信しているCTCP PONGだったり色々。 どうもこちらから何かアクションを起こした時にTCPの再送を繰り返して、それが一定回数になるとクライアント側が切断してしまうらしい。 何度か見ていると、毎回7回再送→切断というパターンになっている。</p>
+
+<p>次に、ルータ（FreeBSD）でtcpdumpを起動して調べてみる。ちなみにipfilterを使っているので、kernelは既にプロミスキャスモードが可能なようにコンパイルされている。</p>
+
+<h1 id="tcpdump--vv--l--n--i-ng0-host-xxxxxxxxxxxx--tee-tcpdumplog">tcpdump -vv -l -n -i ng0 host xxx.xxx.xxx.xxx | tee tcpdump.log</h1>
+
+<p>とかやってログを取りつつ観察。ちなみにng0はPPPoEドライバmpd4のインターフェイス名。</p>
+
+<p>切断された時に、Wiresharkと付き合わせて同じシーケンス番号のパケットを探す。</p>
+
+<p>19:33:06.599574 IP (tos 0x0, ttl 127, id 45469, offset 0, flags [DF], proto: TCP (6), length: 40) zzz.zzz.zzz.zzz.3997 &gt; xxx.xxx.xxx.xxx.6669: ., cksum 0xa883 (correct), 2650:2650(0) ack 61672 win 65361</p>
+
+<p>うーん、よくわからない（こら） まぁ少なくともng0からは出て行ってるので（zzz.zzz.zzz.zzzはWAN側アドレス）、ipfilterがブロックしてるとかNATが働いてないとかいうのではなさそう。 tcpdumpはちっと分かりにくいので、他のパケットダンプを試してみよう。以下次号。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2010/04/e6-ac-a1-e5-85-83-e6-96-ad-e5-b1-a4.html" data-toggle="tooltip" data-placement="top" title="次元断層">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2010/05/e3-81-8a-e7-b4-84-e6-9d-9f-e4-ba-8c-e7-82-b9.html" data-toggle="tooltip" data-placement="top" title="お約束二点">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>

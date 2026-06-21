@@ -1,0 +1,29 @@
+title: "Proxima Fermata"
+description: "日々是停留"
+url: "https://blog.larus.jp"
+baseurl: ""
+
+author: nysalor
+
+theme: jekyll-theme-clean-blog
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+
+permalink: /:year/:month/:title.html
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - convert_to_markdown.py
+  - index.html
+  - feed.xml
+  - sitemap.xml
+  - robots.txt
+  - about

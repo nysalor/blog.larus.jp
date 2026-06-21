@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    acts_as_list - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="任意に並び替えがしたいナリ、とお客さんに言われたので、acts_as_listを使ってみた。 使い方はほぼこちらの通りでOK。簡単簡単。 http://tobysoft.net/wiki/index.php?Ruby%2FRuby%20on%20Rails%2Facts_as_list 最初あるいは最後のエントリ...">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="/assets/css/syntax.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
+  <link rel="canonical" href="https://blog.larus.jp/2010/03/acts_as_list.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>acts_as_list</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on March 28, 2010 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>任意に並び替えがしたいナリ、とお客さんに言われたので、acts_as_listを使ってみた。 使い方はほぼこちらの通りでOK。簡単簡単。 <a href="http://tobysoft.net/wiki/index.php?Ruby%2FRuby%20on%20Rails%2Facts_as_list">http://tobysoft.net/wiki/index.php?Ruby%2FRuby%20on%20Rails%2Facts_as_list</a> 最初あるいは最後のエントリかどうかは、model.first?とかmodel.last?で取れる（view内でとても便利）。ただし常時n+1問題が発生するので、頻繁に並び替えるような用途では危険。</p>
+
+<p>ついでに、ソートしてpositionを付け直す機能の実装でちょっと悩む。 普通にmove_to_bottomを使って</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>items.each do |item|
+item.move_to_bottom
+end
+</code></pre></div></div>
+
+<p>とかやると、positionの値が現在の最後+1から付け直されてしまう（当たり前だけど）。機能的には何ら問題ないけど、ソートするごとにpositionが増えていって気持ち悪い。 acts_as_listのソースを読んで、</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>items.each_with_index do |item, index|
+item.insert_at(index+1)
+end
+</code></pre></div></div>
+
+<p>なんてコードを書いてみたら、positionが[1,1,1,1,5,5,5…]みたいな面白い並びになってしまった。ガッデム。 色々試行錯誤したけど、単純に</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>items.each_with_index do |item, index|
+item.update_attributes(:position =&gt; index + 1)
+
+end
+</code></pre></div></div>
+
+<p>で良かった。KISSですな。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2010/03/e3-83-aa-e3-83-9d-e3-82-b8-e3-83-88-e3-83-aa-e5-86-8d-e6-a7-8b-e7-af-89.html" data-toggle="tooltip" data-placement="top" title="リポジトリ再構築">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2010/04/e3-81-82-e3-82-8a-e3-81-8c-e3-81-a1-e3-81-aa-e3-83-9f-e3-82-b9.html" data-toggle="tooltip" data-placement="top" title="ありがちなミス">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>
