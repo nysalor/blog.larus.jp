@@ -9,3 +9,8 @@ logs
 
 # macOS
 .DS_Store
+
+# Jekyll
+_site/
+.jekyll-cache/
+.jekyll-metadata
