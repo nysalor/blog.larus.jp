@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    ルータ交換、そして - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="IRCが切断されまくる件についての続編。 ルータ−モデム間のLANケーブルと電話線を全て交換したが解決しないので、次の一手としてルータを変更してみることにした。 ルータはFreeBSDで運用していたが、無線APとして使っているバッファローのWZR-HP-G300NHにルータ機能が付いているので、これを有効にして切...">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://blog.larus.jp/2010/06/e3-83-ab-e3-83-bc-e3-82-bf-e4-ba-a4-e6-8f-9b-e3-80-81-e3-81-9d-e3-81-97-e3-81-a6.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>ルータ交換、そして</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on June 16, 2010 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p><a href="http://blog.larus.jp/?p=89">IRCが切断されまくる件について</a>の続編。 ルータ−モデム間のLANケーブルと電話線を全て交換したが解決しないので、次の一手としてルータを変更してみることにした。 ルータはFreeBSDで運用していたが、無線APとして使っているバッファローのWZR-HP-G300NHにルータ機能が付いているので、これを有効にして切り替える。 原因が他にあった場合は元に戻せるよう、ネットワークにはあまり手を加えたくない。 というわけで、DHCPやDNS（unboundで運用中）はそのままに、デフォルトゲートウェイのみをWZR-HP-G300NHに移行する。</p>
+
+<p>まず、WZR以下略のルータ機能を復活させる。切り替えスイッチ一つで有効・無効にできる（WANポートの信号の有無を見て自動的に切り替えるAUTOもあり）が、有効にしたところLAN側のIPアドレスが自動的にデフォルトの192.168.1.1になってしまった。我が家のネットワークとはセグメントが違うので、いきなりここでつまずく。ちなみにルータ機能を有効にするとLAN側IPアドレスをDHCPで取得することはできない。何なのこの仕様。 PCのIPアドレスを一時的に変更して対処し、とりあえず外には出れるようにした。 次にFreeBSD側の設定変更。rc.confの以下の項目を全部NOに書き換える。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># ゲートウェイ
+gateway_enable="NO"
+# mpd(pppドライバ)
+mpd_enable="NO"
+# ipfilter
+ipfilter_enable="NO"
+# NAT
+ipnat_enable="NO"
+# linux igd(uPnPデーモン)
+linuxigd_enable="NO"
+</code></pre></div></div>
+
+<p>さらにdefaultrouterをWZR略のアドレスに変更して、面倒なので再起動…すると応答がなくなった。あれぇ。 起動はしているようだったので、普段繋げてないキーボードを繋いで確認。 ifconfigしてみると、UPになってはいるもののLAN内のどこにも到達できない。 自分自身のアドレスにも到達不可。なんとlocalhostにすら到達しない！ 小一時間ほどパニクったが、答えは簡単だった。ipfilterをkernelに組み込んでしまっていたので、ipfilter_enable=”NO”だとスタンドアロンになってしまうのであった。kernel moduleにしとけって話ですよね。 後で戻す可能性もあるし、いちいちkernelの再構築をすることもないのでipfilterを有効にして再起動。以後は特に問題なし。</p>
+
+<p>さて、さっそくwiresharkでパケットを確認。TCPの再送は続いている… 夜半にはめでたくIRCが切断。おめでとうルータ君、君の疑いは晴れた。 これで外に繋がっているルートはモデムを除いて全て交換したので、NTTに電話するしかなくなった。 以下次号。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2010/06/members-only.html" data-toggle="tooltip" data-placement="top" title="Members Only">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2010/06/ntt-e3-81-ab-e9-9b-bb-e8-a9-b1.html" data-toggle="tooltip" data-placement="top" title="NTTに電話">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>

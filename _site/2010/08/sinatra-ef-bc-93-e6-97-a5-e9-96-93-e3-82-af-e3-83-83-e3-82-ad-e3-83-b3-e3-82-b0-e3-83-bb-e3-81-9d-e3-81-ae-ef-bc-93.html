@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Sinatra３日間クッキング・その３ - Proxima Fermata
+    
+  </title>
+
+  <meta name="description" content="SInatraでなんか作ってみようその３。 shotgunの使い方とpagenationのやり方。">
+
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+  <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://blog.larus.jp/2010/08/sinatra-ef-bc-93-e6-97-a5-e9-96-93-e3-82-af-e3-83-83-e3-82-ad-e3-83-b3-e3-82-b0-e3-83-bb-e3-81-9d-e3-81-ae-ef-bc-93.html">
+  <link rel="alternate" type="application/rss+xml" title="Proxima Fermata" href="/feed.xml">
+
+</head>
+
+
+<body>
+
+  <!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="/">Proxima Fermata</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      Menu
+      <i class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- Page Header -->
+
+  <header class="masthead">
+    
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+            <h1>Sinatra３日間クッキング・その３</h1>
+            
+            <span class="meta">Posted by
+              <a href="#">nysalor</a>
+              on August 13, 2010 &middot; <span class="reading-time" title="Estimated read time">
+  
+   1 min  read </span>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <p>SInatraでなんか作ってみようその３。 shotgunの使い方とpagenationのやり方。</p>
+
+<p>ここまでできたら、ruby server.rbとかやるだけでhttp://localhost:4567/で動作してしまうが、最初に書いた通り開発中はshotgunを使わないと、スクリプトを書き換える度にCTRL+Cで止めて立ち上げ直すことになってめんどくさい。余談だけど、sinatraを止めると「sinatraはセッションを終える（観衆は拍手した）」とか出てきてかっこいい。 閑話休題、shotgunで立ち上げるには、</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shotgun server.rb -p 4567 -s mongrel
+</code></pre></div></div>
+
+<p>と、ポートとサーバを指定してやる必要があった。もちろんwebrickでもthinでも何でもいい、はず。 これでブラウザでアクセスする度にスクリプトが再読み込みされる。後は適当に書いていくだけ。 なお、本番環境では上記のshotgunをrubyに変えるだけでOK。</p>
+
+<p>もう一つ引っかかったのはpagenation。情報が少ないんだよね。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sequel.extension :pagination
+</code></pre></div></div>
+
+<p>を宣言しておいて、コントローラで</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>get '/all/:page' do
+  @page = params[:page].to_i
+  @items = Items.order_by(:id.desc).paginate(@page, 20)
+  erb :index
+end
+</code></pre></div></div>
+
+<p>としておけば、ビューで@items.current_pageなどのメソッドが使えるようになる。 その他<a href="http://sequel.rubyforge.org/rdoc-plugins/classes/Sequel/Dataset/Pagination.html">利用可能なメソッド一覧</a>。</p>
+
+<p>以上、初めてなので３日くらいかかってしまったが（うち１日はhamlの記法に悩み、１日はpaginationで悩んでいた）、次回からはほんとに数時間で書けてしまうと思う。 まぁ、今回はイントラでしか使わないのでここで終了だけど、ちゃんと動かそうと思うとリバースプロキシとかやらないといけないんで、そのへんの手間はRailsアプリをデプロイする時とあまり変わらないかも知れない。 ともあれ、短時間で何かでっち上げたい時には便利なんじゃないでしょうか。あと簡潔に書けるので教育に良いかも。</p>
+
+
+        <hr>
+
+        <div class="clearfix">
+
+          
+          <a class="btn btn-primary float-left" href="/2010/08/sinatra-ef-bc-93-e5-88-86-e9-96-93-e3-82-af-e3-83-83-e3-82-ad-e3-83-b3-e3-82-b0-e3-83-bb-e3-81-9d-e3-81-ae-ef-bc-91.html" data-toggle="tooltip" data-placement="top" title="SInatra３分間クッキング・その１">&larr; Previous<span class="d-none d-md-inline">
+              Post</span></a>
+          
+          
+          <a class="btn btn-primary float-right" href="/2010/08/sinatra-ef-bc-93-e6-99-82-e9-96-93-e3-82-af-e3-83-83-e3-82-ad-e3-83-b3-e3-82-b0-e3-83-bb-e3-81-9d-e3-81-ae-ef-bc-92.html" data-toggle="tooltip" data-placement="top" title="Sinatra３時間クッキング・その２">Next<span class="d-none d-md-inline">
+              Post</span> &rarr;</a>
+          
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+
+<hr>
+
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <ul class="list-inline text-center">
+          
+          
+          
+          
+          
+          
+        </ul>
+        <p class="copyright text-muted">Copyright &copy; nysalor 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/startbootstrap-clean-blog/js/scripts.js"></script>
+
+<script src="/assets/scripts.js"></script>
+
+
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '');
+</script>
+
+
+
+</body>
+
+</html>
